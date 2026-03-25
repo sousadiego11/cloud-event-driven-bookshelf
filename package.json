@@ -1,8 +1,12 @@
 {
   "name": "cloud-event-driven-ecommerce",
-  "module": "index.ts",
+  "description": "Event-driven e-commerce backend built with serverless architecture using AWS services like Lambda, SNS, and SQS.",
+  "module": "app.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "build": "bun build ./src/lambdas/*.ts --outdir ./dist --target=node --format=cjs"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
