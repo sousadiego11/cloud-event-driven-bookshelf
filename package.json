@@ -5,9 +5,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bun build ./src/lambdas/*.ts --outdir ./dist --target=node --format=cjs"
+    "build": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --target=node --format=cjs",
+    "aws:apigateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.161",
     "@types/bun": "latest"
   },
   "peerDependencies": {
