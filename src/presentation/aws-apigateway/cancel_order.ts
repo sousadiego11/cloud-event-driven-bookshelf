@@ -2,7 +2,7 @@ import type { APIGatewayProxyEvent } from "aws-lambda";
 import { log } from "../../shared/logger";
 
 export const handler = async (evt: APIGatewayProxyEvent) => {
-    log("reservation created: ");
+    log("=======\nOrder cenceled: \n=======");
 
     return {
         statusCode: 200,

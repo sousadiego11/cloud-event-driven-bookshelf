@@ -14,51 +14,44 @@ This project demonstrates:
 
 ---
 
-## 🔹 Event: Reservation Created `v1`
-Triggered when a user creates a reservation via the API Gateway.
+## 🔹 Event: Order Created `v1`
+Triggered when a user creates an order via the API Gateway.
 
-The **entry Lambda** receives the HTTP request (`POST /reservations`) from the client and publishes the `reservation.created.v1` event to an SNS topic.  
+The **entry Lambda** receives the HTTP request (`POST /orders`) from the client and publishes the `order.created.v1` event to an SNS topic.  
 This topic fans out messages to multiple SQS queues, each executing a real asynchronous effect.
 
-| Action          | SQS Queue                              | Description                                         |
-|-----------------|----------------------------------------|-----------------------------------------------------|
-| NotifyStaff     | `reservation.created.v1.notify_staff`  | Notify staff or provider about the new reservation. |
-
-
-## 🔹 Event: Reservation Confirmed `v1`
-Triggered when a reservation is confirmed by the user or system **using the API Gateway**.
-
-The client sends an HTTP request (`POST /reservations/{id}/confirm`) and publishes the `reservation.confirmed.v1` event to an SNS topic.
-
-| Action          | SQS Queue                                | Description                                                |
-|-----------------|------------------------------------------|------------------------------------------------------------|
-| NotifyStaff     | `reservation.confirmed.v1.notify_staff`  | Inform staff/provider that the reservation is confirmed.   |
-| NotifyUser      | `reservation.confirmed.v1.notify_user`   | Inform the user that the reservation is confirmed.         |
-
-
-## 🔹 Event: Reservation Canceled `v1`
-Triggered when a reservation is canceled by the user or system **using the API Gateway**.
-
-The client sends an HTTP request (`POST /reservations/{id}/cancel`) and publishes the `reservation.canceled.v1` event to an SNS topic.
-
-| Action          | SQS Queue                               | Description                                             |
-|-----------------|-----------------------------------------|---------------------------------------------------------|
-| NotifyStaff     | `reservation.canceled.v1.notify_staff`  | Inform staff/provider about the cancellation.           |
-| NotifyUser      | `reservation.canceled.v1.notify_user`   | Inform the user about the cancellation.                 |
+| Action            | SQS Queue                              | Description                                         |
+|------------------|----------------------------------------|-----------------------------------------------------|
+| ReserveInventory  | `order.created.v1.reserve_inventory`   | Reserve products in stock for this order.          |
+| NotifyUser        | `order.created.v1.notify_user`         | Notify the user that the order was created.        |
+| NotifyWarehouse   | `order.created.v1.notify_warehouse`    | Inform the warehouse about the new order.          |
 
 ---
 
-## 🔁 Flow
-1. Client sends request → API Gateway
-2. Lambda creates order → emits `order.created` event
-3. EventBridge routes event to multiple SQS queues:
-   - payment
-   - inventory
-   - notification
-   - analytics
-4. Consumers process messages asynchronously with **idempotency**
-5. Payment service emits `payment.completed`
-6. New event triggers billing, notification, and analytics with **DLQ** handling for failures
+## 🔹 Event: Order Paid `v1`
+Triggered when an order payment is confirmed via the API Gateway.
+
+The client sends an HTTP request (`POST /orders/{id}/pay`) and publishes the `order.paid.v1` event to an SNS topic.
+
+| Action            | SQS Queue                            | Description                                           |
+|------------------|--------------------------------------|-------------------------------------------------------|
+| CapturePayment    | `order.paid.v1.capture_payment`      | Process and confirm the payment.                     |
+| ConfirmShipment   | `order.paid.v1.confirm_shipment`     | Prepare the order for shipment.                      |
+| NotifyUser        | `order.paid.v1.notify_user`          | Inform the user that the payment was confirmed.     |
+
+---
+
+## 🔹 Event: Order Canceled `v1`
+Triggered when an order is canceled by the user or system via the API Gateway.
+
+The client sends an HTTP request (`POST /orders/{id}/cancel`) and publishes the `order.canceled.v1` event to an SNS topic.
+
+| Action            | SQS Queue                             | Description                                           |
+|------------------|---------------------------------------|-------------------------------------------------------|
+| ReleaseInventory  | `order.canceled.v1.release_inventory` | Release reserved products back to stock.            |
+| RefundPayment     | `order.canceled.v1.refund_payment`    | Refund payment if it was already processed.         |
+| NotifyUser        | `order.canceled.v1.notify_user`       | Inform the user about the order cancellation.       |
+| NotifyWarehouse   | `order.canceled.v1.notify_warehouse`  | Inform the warehouse that the order was canceled.   |
 
 ---
 
