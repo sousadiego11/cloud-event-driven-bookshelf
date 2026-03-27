@@ -12,36 +12,39 @@ This project demonstrates:
 - **Idempotent message processing**
 - **Dead Letter Queues (DLQ) for failed events**
 
-## 🧩 Architecture Overview
-
-![Architecture Diagram](https://mermaid.ink/img/pako:eNq9VV1v2jAU_SuRnyEODp95mJp1XYVEV9pUm7RlDya5gKfYjhwHxoD_PidZC1EqwdQxP9nWuefa595jb1EkY0AemidyHS2p0tbkMRShsMzI8tlC0XRp3asYVPYtRNXE-mjAIfpeoYoRMwWRZlKU0c-7fudqazG-8KwQLbVOMw_jKBb2jyyGhK2ULUBjkXK8BCVZJEV2RWzH7gwx6WKZ64QJwHkGys5WixBZ-yPq6e0r5AWHzSJIqYDEZhL7XwJsYrGfpu2x0GCuU5wS-9Nx-5ZqWNNNk3vi_w31teRprgFPKJ_FtMl28_npLSe9WYHQ7xWLF9DkDh6Ct3AHjKcJtB9yyKEdgFqZoEOS4zpa7fY7aze9D54sLMse2JUlqBekQl0rMMqWnVJpsisUrclbAUtIhY53pU511ZqoKd1wI8euvPgp8FgU0km1OQ_-SWo2Z1GpzHkRvqDJRrMoO4aDiBv2eYQVg3Xhnz-zsw1ELmkgcjkDkX9rIHJBA5H_YSBybCBVNUHpIFKvSAUL8hlnuuqVg4VITeAKWWGOPUTqwr0CuzMPvjq0-emAhjNOh9StQV6sgVpoYUqBPK1yaCEOitNiibYFJER6CRxCVBQjhjnNEx2iUOxNmKnFVyn5c6SS-WKJvDlNMrPK09hk_cCoKQx_2VUmoTGrzIVGnut0BiUL8rboJ_I6w449IqQ36jlu3x0Mhy20MbtOzyZ9Z0i6brfXI12nv2-hX2Vexx4QMhi5I7c_IKOu2yEtBDEzD8xd9YOWH-n-N686TM0?type=png)
-
 ---
 
-## 🔹 Event: Order Created  
-Triggered when a new order is created by a client via the API Gateway.
+## 🔹 Event: Reservation Created `v1`
+Triggered when a user creates a reservation via the API Gateway.
 
-The **entry Lambda** receives the HTTP request (`POST /orders`) from the client, creates the order, and publishes the `order.created` event to an SNS topic. This topic fans out messages to multiple SQS queues, each consumed by an independent service responsible for a specific domain.
+The **entry Lambda** receives the HTTP request (`POST /reservations`) from the client and publishes the `reservation.created.v1` event to an SNS topic.  
+This topic fans out messages to multiple SQS queues, each executing a real asynchronous effect.
 
-| Action            | SQS Queue                  | Description                          |
-|------------------|----------------------------|--------------------------------------|
-| ProcessPayment   | order.created.payment      | Charge customer and update status    |
-| ReserveStock     | order.created.inventory    | Validate and reserve items           |
-| NotifyCustomer   | order.created.notification | Send order confirmation              |
-| TrackOrder       | order.created.analytics    | Store metrics and tracking data      |
+| Action          | SQS Queue                              | Description                                         |
+|-----------------|----------------------------------------|-----------------------------------------------------|
+| NotifyStaff     | `reservation.created.v1.notify_staff`  | Notify staff or provider about the new reservation. |
 
----
 
-## 🔹 Event: Review Created
-Triggered when a client submits a product review via API Gateway.
+## 🔹 Event: Reservation Confirmed `v1`
+Triggered when a reservation is confirmed by the user or system **using the API Gateway**.
 
-The entry Lambda receives the HTTP request (`POST /reviews`) from the client, stores the review, and publishes the `review.created` event to an SNS topic. The topic fans out messages to multiple SQS queues for downstream services.
+The client sends an HTTP request (`POST /reservations/{id}/confirm`) and publishes the `reservation.confirmed.v1` event to an SNS topic.
 
-| Action            | SQS Queue                 | Description                          |
-|------------------|---------------------------|--------------------------------------|
-| ModerateReview    | review.created.moderation | Check for inappropriate content      |
-| NotifySeller      | review.created.notification | Notify product seller of new review |
-| TrackAnalytics    | review.created.analytics  | Store review metrics and trends      |
+| Action          | SQS Queue                                | Description                                                |
+|-----------------|------------------------------------------|------------------------------------------------------------|
+| NotifyStaff     | `reservation.confirmed.v1.notify_staff`  | Inform staff/provider that the reservation is confirmed.   |
+| NotifyUser      | `reservation.confirmed.v1.notify_user`   | Inform the user that the reservation is confirmed.         |
+
+
+## 🔹 Event: Reservation Canceled `v1`
+Triggered when a reservation is canceled by the user or system **using the API Gateway**.
+
+The client sends an HTTP request (`POST /reservations/{id}/cancel`) and publishes the `reservation.canceled.v1` event to an SNS topic.
+
+| Action          | SQS Queue                               | Description                                             |
+|-----------------|-----------------------------------------|---------------------------------------------------------|
+| NotifyStaff     | `reservation.canceled.v1.notify_staff`  | Inform staff/provider about the cancellation.           |
+| NotifyUser      | `reservation.canceled.v1.notify_user`   | Inform the user about the cancellation.                 |
 
 ---
 
