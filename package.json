@@ -5,7 +5,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --target=node --format=cjs",
+    "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
     "dev": "bun run build && cd ./sam && sam local start-api --template template.yml"
   },
   "devDependencies": {
