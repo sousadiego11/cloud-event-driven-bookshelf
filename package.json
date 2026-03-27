@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --target=node --format=cjs",
-    "aws:apigateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml"
+    "aws:apigateway": "bun run build && cd ./sam && sam local start-api --template template.yml"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.161",

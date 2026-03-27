@@ -11,17 +11,47 @@ Globals:
     MemorySize: 128
 
 Resources:
-  OrdersFunction:
+  ReservationsCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
-      Handler: aws-apigateway/post.order.handler
+      Handler: aws-apigateway/reservations_create.handler
       Runtime: nodejs24.x
       Architectures:
         - x86_64
       Events:
-        CreateOrder:
+        CreateReservation:
           Type: Api
           Properties:
-            Path: /orders
+            Path: /reservations
+            Method: post
+
+  ReservationsConfirmFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/reservations_confirm.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        ConfirmReservation:
+          Type: Api
+          Properties:
+            Path: /reservations/{id}/confirm
+            Method: post
+
+  ReservationsCancelFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/reservations_cancel.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        CancelReservation:
+          Type: Api
+          Properties:
+            Path: /reservations/{id}/cancel
             Method: post
