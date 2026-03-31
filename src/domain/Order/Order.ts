@@ -1,8 +1,10 @@
+import { DomainError } from "../Error/errors";
+
 type OrderId = string;
 type UserId = string;
 type ProductId = string;
 
-export type OrderStatus = "created" | "paid" | "canceled";
+export type OrderStatus = "created" | "paid" | "canceled" | "shipped";
 
 export interface OrderItem {
     productId: ProductId;
@@ -16,21 +18,44 @@ export class Order {
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
+    version: number = 0;
+    paymentId?: string;
+    shipmentId?: string;
 
-    constructor(
-        id: OrderId,
-        userId: UserId,
-        items: OrderItem[],
-        status: OrderStatus,
-        createdAt: Date,
-        updatedAt: Date
-    ) {
+    private constructor(id: OrderId, userId: UserId, items: OrderItem[]) {
         this.id = id;
         this.userId = userId;
         this.items = items;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.status = "created";
+        this.createdAt = new Date();
+        this.updatedAt = this.createdAt;
+    }
+
+    static create(id: OrderId, userId: UserId, items: OrderItem[]): Order {
+        return new Order(id, userId, items);
+    }
+
+    pay(paymentId: string): void {
+        if (this.status !== "created") throw new DomainError("Cannot pay non-created order");
+        this.status = "paid";
+        this.paymentId = paymentId;
+        this.updatedAt = new Date();
+        this.version++;
+    }
+
+    cancel(reason: string): void {
+        if (this.status === "paid") throw new DomainError("Cannot cancel paid order");
+        this.status = "canceled";
+        this.updatedAt = new Date();
+        this.version++;
+    }
+
+    ship(shipmentId: string): void {
+        if (this.status !== "paid") throw new DomainError("Cannot ship non-paid order");
+        this.status = "shipped";
+        this.shipmentId = shipmentId;
+        this.updatedAt = new Date();
+        this.version++;
     }
 
     toDto() {
@@ -41,6 +66,9 @@ export class Order {
             status: this.status,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
+            version: this.version,
+            paymentId: this.paymentId,
+            shipmentId: this.shipmentId,
         };
     }
 }

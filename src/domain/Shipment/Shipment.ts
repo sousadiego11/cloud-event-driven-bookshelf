@@ -1,33 +1,30 @@
-
 type ShipmentId = string;
+type OrderId = string;
 
-export type ShipmentStatus = "pending" | "shipped" | "delivered";
+export type ShipmentStatus = "pending" | "confirmed";
 
 export class Shipment {
     id: ShipmentId;
-    orderId: string;
+    orderId: OrderId;
     carrier: string;
     trackingNumber: string;
     status: ShipmentStatus;
-    shippedAt?: Date;
-    deliveredAt?: Date;
+    confirmedAt?: Date;
+    version: number = 0;
 
-    constructor(
-        id: ShipmentId,
-        orderId: string,
-        carrier: string,
-        trackingNumber: string,
-        status: ShipmentStatus,
-        shippedAt?: Date,
-        deliveredAt?: Date
-    ) {
+    constructor(id: ShipmentId, orderId: OrderId, carrier: string, trackingNumber: string) {
         this.id = id;
         this.orderId = orderId;
         this.carrier = carrier;
         this.trackingNumber = trackingNumber;
-        this.status = status;
-        this.shippedAt = shippedAt;
-        this.deliveredAt = deliveredAt;
+        this.status = "pending";
+    }
+
+    confirm(): void {
+        if (this.status === "confirmed") return;
+        this.status = "confirmed";
+        this.confirmedAt = new Date();
+        this.version++;
     }
 
     toDto() {
@@ -37,8 +34,8 @@ export class Shipment {
             carrier: this.carrier,
             trackingNumber: this.trackingNumber,
             status: this.status,
-            shippedAt: this.shippedAt,
-            deliveredAt: this.deliveredAt,
+            confirmedAt: this.confirmedAt,
+            version: this.version,
         };
     }
 }

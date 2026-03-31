@@ -1,18 +1,47 @@
 type ProductIdInventory = string;
+type OrderId = string;
 
-export class Inventory {
+export class InventoryReservation {
+    id: string;
     productId: ProductIdInventory;
-    availableQuantity: number;
+    orderId: OrderId;
+    quantity: number;
+    reservedQuantity: number;
+    status: "reserved" | "released";
+    createdAt: Date;
+    version: number = 0;
 
-    constructor(productId: ProductIdInventory, availableQuantity: number) {
+    private constructor(id: string, productId: ProductIdInventory, orderId: OrderId, quantity: number) {
+        this.id = id;
         this.productId = productId;
-        this.availableQuantity = availableQuantity;
+        this.orderId = orderId;
+        this.quantity = quantity;
+        this.reservedQuantity = quantity;
+        this.status = "reserved";
+        this.createdAt = new Date();
+    }
+
+    static create(id: string, productId: ProductIdInventory, orderId: OrderId, quantity: number): InventoryReservation {
+        return new InventoryReservation(id, productId, orderId, quantity);
+    }
+
+    release(): void {
+        if (this.status === "released") return;
+        this.status = "released";
+        this.reservedQuantity = 0;
+        this.version++;
     }
 
     toDto() {
         return {
+            id: this.id,
             productId: this.productId,
-            availableQuantity: this.availableQuantity,
+            orderId: this.orderId,
+            quantity: this.quantity,
+            reservedQuantity: this.reservedQuantity,
+            status: this.status,
+            createdAt: this.createdAt,
+            version: this.version,
         };
     }
 }
