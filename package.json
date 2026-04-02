@@ -14,5 +14,8 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1022.0"
   }
 }
