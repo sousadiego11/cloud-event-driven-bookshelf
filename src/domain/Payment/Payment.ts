@@ -11,7 +11,6 @@ export class Payment {
     amount: number;
     status: PaymentStatus;
     processedAt?: Date;
-    version: number = 0;
 
     constructor(id: PaymentId, orderId: OrderId, amount: number) {
         this.id = id;
@@ -24,7 +23,6 @@ export class Payment {
         if (this.status !== "pending") throw new DomainError("Cannot capture non-pending payment");
         this.status = "captured";
         this.processedAt = new Date();
-        this.version++;
     }
 
     refund(): void {
@@ -32,7 +30,6 @@ export class Payment {
         if (this.status !== "captured") throw new DomainError("Cannot refund uncaptured payment");
         this.status = "refunded";
         this.processedAt = new Date();
-        this.version++;
     }
 
     toDto() {
@@ -42,7 +39,6 @@ export class Payment {
             amount: this.amount,
             status: this.status,
             processedAt: this.processedAt,
-            version: this.version,
         };
     }
 }

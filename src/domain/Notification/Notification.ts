@@ -9,7 +9,6 @@ export class Notification {
     targetId: string;
     message: string;
     sentAt?: Date;
-    version: number = 0;
 
     constructor(id: string, target: NotificationTarget, targetId: string, message: string) {
         this.id = id;
@@ -21,7 +20,6 @@ export class Notification {
     send(): void {
         if (this.sentAt) return;
         this.sentAt = new Date();
-        this.version++;
     }
 
     toDto() {
@@ -31,7 +29,6 @@ export class Notification {
             targetId: this.targetId,
             message: this.message,
             sentAt: this.sentAt,
-            version: this.version,
         };
     }
 }

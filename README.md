@@ -91,7 +91,8 @@ The client sends an HTTP request (`POST /orders/{id}/cancel`) and publishes the 
 - https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html  
 
 ### Amazon DynamoDB
-- https://docs.aws.amazon.com/dynamodb/latest/developerguide/Introduction.html  
+- https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/#example-scenarios
+- https://docs.aws.amazon.com/code-library/latest/ug/dynamodb_example_dynamodb_Scenario_GettingStartedMovies_section.html
 
 ### Observability (CloudWatch)
 - https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html  

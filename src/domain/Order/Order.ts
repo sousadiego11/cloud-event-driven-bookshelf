@@ -18,7 +18,6 @@ export class Order {
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
-    version: number = 0;
     paymentId?: string;
     shipmentId?: string;
 
@@ -40,14 +39,12 @@ export class Order {
         this.status = "paid";
         this.paymentId = paymentId;
         this.updatedAt = new Date();
-        this.version++;
     }
 
     cancel(reason: string): void {
         if (this.status === "paid") throw new DomainError("Cannot cancel paid order");
         this.status = "canceled";
         this.updatedAt = new Date();
-        this.version++;
     }
 
     ship(shipmentId: string): void {
@@ -55,7 +52,6 @@ export class Order {
         this.status = "shipped";
         this.shipmentId = shipmentId;
         this.updatedAt = new Date();
-        this.version++;
     }
 
     toDto() {
@@ -66,7 +62,6 @@ export class Order {
             status: this.status,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
-            version: this.version,
             paymentId: this.paymentId,
             shipmentId: this.shipmentId,
         };

@@ -10,7 +10,6 @@ export class Shipment {
     trackingNumber: string;
     status: ShipmentStatus;
     confirmedAt?: Date;
-    version: number = 0;
 
     constructor(id: ShipmentId, orderId: OrderId, carrier: string, trackingNumber: string) {
         this.id = id;
@@ -24,7 +23,6 @@ export class Shipment {
         if (this.status === "confirmed") return;
         this.status = "confirmed";
         this.confirmedAt = new Date();
-        this.version++;
     }
 
     toDto() {
@@ -35,7 +33,6 @@ export class Shipment {
             trackingNumber: this.trackingNumber,
             status: this.status,
             confirmedAt: this.confirmedAt,
-            version: this.version,
         };
     }
 }
