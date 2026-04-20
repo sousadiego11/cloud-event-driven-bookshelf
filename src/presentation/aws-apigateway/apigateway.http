@@ -1,0 +1,17 @@
+### Create Order - POST /orders
+POST http://127.0.0.1:3000/orders
+Content-Type: application/json
+
+{
+  "userId": "user-123",
+  "items": [
+    { 
+      "productId": "prod-1", 
+      "quantity": 2 
+    },
+    { 
+      "productId": "prod-2", 
+      "quantity": 1 
+    }
+  ]
+}
