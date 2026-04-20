@@ -1,19 +1,17 @@
-import { InventoryReservation } from "../../../domain/Inventory/Inventory";
+import { Inventory } from "../../../domain/Inventory/Inventory";
 
-export type InventoryReservationDTO = ReturnType<InventoryReservation['toDto']>;
+export type InventoryDTO = ReturnType<Inventory['toDto']>;
 
 export interface IInventoryRepository {
     // Create/Save operations
-    save(reservationDto: InventoryReservationDTO): Promise<void>;
+    save(inventoryDto: InventoryDTO): Promise<void>;
 
     // Read operations
-    findById(id: string): Promise<InventoryReservationDTO | null>;
-    findByOrderId(orderId: string): Promise<InventoryReservationDTO[]>;
-    findByProductId(productId: string): Promise<InventoryReservationDTO[]>;
-    findByOrderIdAndProductId(orderId: string, productId: string): Promise<InventoryReservationDTO | null>;
+    findById(id: string): Promise<InventoryDTO | null>;
+    findByProductId(productId: string): Promise<InventoryDTO[]>;
 
     // Update operations
-    update(reservationDto: InventoryReservationDTO): Promise<void>;
+    update(inventoryDto: InventoryDTO): Promise<void>;
 
     // Delete operations
     delete(id: string): Promise<void>;

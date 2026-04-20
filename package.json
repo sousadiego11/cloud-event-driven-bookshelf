@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
-    "dev": "bun run build && cd ./sam && sam local start-api --template template.yml"
+    "dev": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.161",
@@ -16,6 +16,8 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1022.0"
+    "@aws-sdk/client-dynamodb": "^3.1032.0",
+    "@aws-sdk/lib-dynamodb": "^3.1032.0",
+    "uuid": "^14.0.0"
   }
 }

@@ -1,4 +1,4 @@
-import type { InventoryReservation } from "../Inventory/Inventory";
+import type { Inventory } from "../Inventory/Inventory";
 import type { Order } from "../Order/Order";
 
 export type NotificationTarget = "user" | "warehouse";
@@ -62,13 +62,13 @@ export class NotificationFactory {
         ];
     }
 
-    static forInventoryReserved(reservation: ReturnType<InventoryReservation["toDto"]>): Notification[] {
+    static forInventoryReserved(order: ReturnType<Order["toDto"]>): Notification[] {
         return [
             new Notification(
-                `notify-warehouse-inv-${reservation.id}`,
+                `notify-warehouse-inv-${order.id}`,
                 "warehouse",
                 "warehouse-1",
-                `Estoque reservado para pedido ${reservation.orderId}: ${reservation.quantity} x ${reservation.productId}`
+                `Estoque reservado para pedido ${order.id}`
             ),
         ];
     }

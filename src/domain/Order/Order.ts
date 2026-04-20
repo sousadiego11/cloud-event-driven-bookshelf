@@ -1,3 +1,4 @@
+import { Id } from "../../application/Shared/Id";
 import { DomainError } from "../Error/errors";
 
 type OrderId = string;
@@ -18,8 +19,6 @@ export class Order {
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
-    paymentId?: string;
-    shipmentId?: string;
 
     private constructor(id: OrderId, userId: UserId, items: OrderItem[]) {
         this.id = id;
@@ -30,40 +29,37 @@ export class Order {
         this.updatedAt = this.createdAt;
     }
 
-    static create(id: OrderId, userId: UserId, items: OrderItem[]): Order {
-        return new Order(id, userId, items);
+    static create(userId: UserId, items: OrderItem[]): Order {
+        const id = Id.generate();
+        return new Order(id.getValue(), userId, items);
     }
 
-    pay(paymentId: string): void {
+    pay(): void {
         if (this.status !== "created") throw new DomainError("Cannot pay non-created order");
         this.status = "paid";
-        this.paymentId = paymentId;
         this.updatedAt = new Date();
     }
 
-    cancel(reason: string): void {
+    cancel(): void {
         if (this.status === "paid") throw new DomainError("Cannot cancel paid order");
         this.status = "canceled";
         this.updatedAt = new Date();
     }
 
-    ship(shipmentId: string): void {
+    ship(): void {
         if (this.status !== "paid") throw new DomainError("Cannot ship non-paid order");
         this.status = "shipped";
-        this.shipmentId = shipmentId;
         this.updatedAt = new Date();
     }
 
     toDto() {
         return {
-            id: this.id,
-            userId: this.userId,
-            items: this.items,
-            status: this.status,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt,
-            paymentId: this.paymentId,
-            shipmentId: this.shipmentId,
+            Id: this.id,
+            UserId: this.userId,
+            Items: this.items,
+            Status: this.status,
+            CreatedAt: this.createdAt.toISOString(),
+            UpdatedAt: this.updatedAt.toISOString(),
         };
     }
 }

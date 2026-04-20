@@ -3,18 +3,25 @@ import { Order } from "../../../domain/Order/Order";
 export type OrderDTO = ReturnType<Order['toDto']>;
 
 export interface IOrderRepository {
-    // Create/Save operations
-    save(orderDto: OrderDTO): Promise<void>;
+    // Create
+    save(order: OrderDTO): Promise<void>;
 
-    // Read operations
+    // Read (todas baseadas em UserId)
     findById(id: string): Promise<OrderDTO | null>;
+
     findByUserId(userId: string): Promise<OrderDTO[]>;
-    findByStatus(status: string): Promise<OrderDTO[]>;
+
+    findByUserIdOrderByCreatedAt(userId: string): Promise<OrderDTO[]>;
+
+    findByUserIdOrderByUpdatedAt(userId: string): Promise<OrderDTO[]>;
+
+    findByUserIdAndStatus(userId: string, status: string): Promise<OrderDTO[]>;
+
     findByIdAndUserId(orderId: string, userId: string): Promise<OrderDTO | null>;
 
-    // Update operations
-    update(orderDto: OrderDTO): Promise<void>;
+    // Update
+    update(order: OrderDTO): Promise<void>;
 
-    // Delete operations
+    // Delete
     delete(id: string): Promise<void>;
 }
