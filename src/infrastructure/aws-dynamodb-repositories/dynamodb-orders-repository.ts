@@ -5,7 +5,7 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 
 import type { IOrderRepository } from "../../application/Order/repositories";
-import type { OrderDTO } from "../../application/Order/repositories/IOrderRepository";
+import type { OrderDTO } from "../../application/Order/dtos/OrderDto";
 
 
 export class DynamoOrderRepository implements IOrderRepository {

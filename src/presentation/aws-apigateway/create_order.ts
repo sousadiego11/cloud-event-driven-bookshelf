@@ -6,13 +6,13 @@ import { log } from "../../shared/logger";
 
 export const handler = async (evt: APIGatewayProxyEvent) => {
     try {
-        log("=======\nCreating order: \n=======");
+        log("=======Creating order: =======");
         const orderRepository = await DynamoOrderRepository.create(dynamodbDocumentClient)
         const createOrderUsecase = new CreateOrderUsecase(orderRepository);
 
         const body = evt.body ? JSON.parse(evt.body) : {};
         await createOrderUsecase.handle({ UserId: body.UserId, Items: body.Items })
-        log("=======\nOrder created: \n=======");
+        log("=======Order created: =======");
 
         return {
             statusCode: 201,

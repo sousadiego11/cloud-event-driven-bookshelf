@@ -1,6 +1,4 @@
-import { Order } from "../../../domain/Order/Order";
-
-export type OrderDTO = ReturnType<Order['toDto']>;
+import type { OrderDTO } from "../dtos/OrderDto";
 
 export interface IOrderRepository {
     // Create

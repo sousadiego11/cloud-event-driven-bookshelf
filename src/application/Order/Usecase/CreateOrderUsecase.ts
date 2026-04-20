@@ -1,16 +1,17 @@
 import { Order } from "../../../domain/Order/Order";
 import type { Usecase } from "../../Shared/Usecase";
-import type { IOrderRepository, OrderDTO } from "../repositories/IOrderRepository";
+import type { OrderDTO } from "../dtos/OrderDto";
+import type { IOrderRepository } from "../repositories/IOrderRepository";
 
-type Input = Pick<OrderDTO, "UserId" | "Items">;
+type CreateOrderInput = Pick<OrderDTO, "UserId" | "Items">;
 
-export class CreateOrderUsecase implements Usecase<Input> {
+export class CreateOrderUsecase implements Usecase<CreateOrderInput> {
     constructor(
         private readonly orderRepository: IOrderRepository
     ) { }
 
-    async handle(input: Input): Promise<void> {
-        const order = Order.create(input.UserId, input.Items);
+    async handle(input: CreateOrderInput): Promise<void> {
+        const order = Order.createFromDto(input.UserId, input.Items);
         await this.orderRepository.save(order.toDto());
     }
 }
