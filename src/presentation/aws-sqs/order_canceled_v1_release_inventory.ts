@@ -1,7 +1,7 @@
 import type { SQSEvent } from "aws-lambda";
-import { log } from "../../shared/logger";
+import { Logger } from "../../shared/logger";
 
 export const handler = async (evt: SQSEvent) => {
-    log("=======\n Released inventory: \n=======");
-    log(JSON.stringify(evt))
+    Logger.log("=======\n Released inventory: \n=======");
+    Logger.log(JSON.stringify(evt))
 };

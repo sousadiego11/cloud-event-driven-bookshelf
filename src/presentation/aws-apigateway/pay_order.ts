@@ -1,8 +1,8 @@
 import type { APIGatewayProxyEvent } from "aws-lambda";
-import { log } from "../../shared/logger";
+import { Logger } from "../../shared/logger";
 
 export const handler = async (evt: APIGatewayProxyEvent) => {
-    log("=======\nOrder paid: \n=======");
+    Logger.log("=======\nOrder paid: \n=======");
 
     return {
         statusCode: 200,

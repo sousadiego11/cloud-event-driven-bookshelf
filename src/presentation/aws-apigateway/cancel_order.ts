@@ -1,8 +1,8 @@
 import type { APIGatewayProxyEvent } from "aws-lambda";
-import { log } from "../../shared/logger";
+import { Logger } from "../../shared/logger";
 
 export const handler = async (evt: APIGatewayProxyEvent) => {
-    log("=======\nOrder cenceled: \n=======");
+    Logger.log("=======\nOrder cenceled: \n=======");
 
     return {
         statusCode: 200,

@@ -3,7 +3,8 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   cede-api
 
-  Event-driven e-commerce backend built with serverless architecture using AWS services like Lambda, SNS, and SQS.
+  Event-driven e-commerce backend built with serverless architecture using AWS
+  services like Lambda, SNS, and SQS.
 
 Globals:
   Function:
@@ -55,3 +56,10 @@ Resources:
           Properties:
             Path: /orders/pay
             Method: post
+
+  OrderCreatedNotifyUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-sqs/order_created_v1_notify_user.handler
+      Runtime: nodejs24.x

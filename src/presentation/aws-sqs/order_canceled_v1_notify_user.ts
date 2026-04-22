@@ -1,7 +1,7 @@
 import type { SQSEvent } from "aws-lambda";
-import { log } from "../../shared/logger";
+import { Logger } from "../../shared/logger";
 
 export const handler = async (evt: SQSEvent) => {
-    log("=======\n User notified for canceled order: \n=======");
-    log(JSON.stringify(evt))
+    Logger.log("=======\n User notified for canceled order: \n=======");
+    Logger.log(JSON.stringify(evt))
 };
