@@ -1,8 +1,8 @@
-import type { ZodSchema } from "zod";
+import type { ZodType } from "zod";
 
 export function parseBody<T>(
     body: string | null,
-    schema: ZodSchema<T>
+    schema: ZodType<T>
 ): T {
     if (!body) {
         throw new Error("Request body is required");
@@ -19,9 +19,7 @@ export function parseBody<T>(
     const result = schema.safeParse(parsed);
 
     if (!result.success) {
-        throw new Error(
-            `Validation error: ${JSON.stringify(result.error.format())}`
-        );
+        throw result.error;
     }
 
     return result.data;

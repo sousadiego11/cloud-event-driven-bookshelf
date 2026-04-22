@@ -1,11 +1,12 @@
 import type { APIGatewayProxyEvent } from "aws-lambda";
-import { CreateOrderUsecase } from "../../application/Order/Usecase/CreateOrderUsecase";
-import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb_client";
-import { DynamoOrderRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-orders-repository";
-import { log } from "../../shared/logger";
-import { ApiResponse } from "../../infrastructure/http/ApiResponse";
 import { z } from "zod";
+import { CreateOrderUsecase } from "../../application/Order/Usecase/CreateOrderUsecase";
+import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
+import { DynamoOrderRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-orders-repository";
+import { ApiResponse } from "../../infrastructure/http/ApiResponse";
+import { Logger } from "../../shared/logger";
 import { parseBody } from "./util/parsebody";
+import { AWSEventBridgePublisher } from "../../infrastructure/aws-eventbridge/eventbridge-publisher";
 
 export const OrderItemSchema = z.object({
     ProductId: z.string().min(1),
@@ -23,18 +24,18 @@ export const OrderSchema = z.object({
 
 export const handler = async (evt: APIGatewayProxyEvent) => {
     try {
-        log("Creating order");
+        Logger.log("Creating order");
 
         const orderRepository = await DynamoOrderRepository.create(dynamodbDocumentClient)
-        const createOrderUsecase = new CreateOrderUsecase(orderRepository);
+        const publisher = await AWSEventBridgePublisher.create()
+        const createOrderUsecase = new CreateOrderUsecase(orderRepository, publisher);
 
         const body = parseBody(evt.body, OrderSchema);
         const result = await createOrderUsecase.handle(body);
 
         return ApiResponse.created(result);
-
     } catch (error) {
-        console.error(error);
-        return ApiResponse.error("Internal server error");
+        Logger.error("Creating order", error);
+        return ApiResponse.error(error);
     }
 };
