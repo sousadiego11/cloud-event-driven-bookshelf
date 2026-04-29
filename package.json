@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
-    "dev": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml",
+    "start:gateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml",
     "invoke:notify": "bun run build:lambdas && cd ./sam && sam local invoke OrderCreatedNotifyUserFunction -e ./events/order-created-sqs-evt.json "
   },
   "devDependencies": {
