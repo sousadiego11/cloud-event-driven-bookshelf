@@ -5,7 +5,7 @@ import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client
 import { DynamoOrderRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-orders-repository";
 import { ApiResponse } from "../../infrastructure/http/ApiResponse";
 import { Logger } from "../../shared/logger";
-import { parseBody } from "./util/parsebody";
+import { parseBody } from "../../shared/parsebody";
 import { AWSEventBridgePublisher } from "../../infrastructure/aws-eventbridge/eventbridge-publisher";
 
 export const OrderItemSchema = z.object({
