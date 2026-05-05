@@ -1,11 +1,11 @@
 resource "aws_dynamodb_table" "orders" {
   name         = "cede-orders"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "OrderId"
+  hash_key     = "Id"
   range_key    = "CreatedAt"
 
   attribute {
-    name = "OrderId"
+    name = "Id"
     type = "S"
   }
 
