@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "dynamodb:UpdateItem"
     ]
 
-    # resources = [aws_dynamodb_table.my_table.arn]
+    resources = [aws_dynamodb_table.orders.arn]
   }
 
   # EventBridge
@@ -102,6 +102,10 @@ resource "aws_lambda_function" "notify_user_order_created" {
 resource "aws_lambda_event_source_mapping" "notify_user_order_created_mapping" {
   event_source_arn = aws_sqs_queue.notification_user_order_created_queue.arn
   function_name    = aws_lambda_function.notify_user_order_created.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
 
   tags = {
     Name = "NotifyUserOrderCreatedMapping"
