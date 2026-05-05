@@ -9,7 +9,7 @@ import type { OrderDTO } from "../../application/Order/dtos/OrderDto";
 
 
 export class DynamoOrderRepository implements IOrderRepository {
-  private TABLE_NAME = "cede_orders";
+  private TABLE_NAME = "cede-orders";
 
   private constructor(
     private readonly docClient: DynamoDBDocumentClient

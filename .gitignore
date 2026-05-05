@@ -32,3 +32,34 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Terraform files
+
+.terraform/
+.terraform.lock.hcl
+
+# State files (NUNCA versionar)
+
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+
+crash.log
+
+# Sensitive variable files
+
+*.tfvars
+*.tfvars.json
+
+# Override files
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config (pode conter credenciais)
+
+.terraformrc
+terraform.rc

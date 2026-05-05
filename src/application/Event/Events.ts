@@ -6,15 +6,15 @@ export namespace Events {
     }
 
     export enum Names {
-        OrderCreated = "OrderCreated.v1",
-        OrderCancelled = "OrderCancelled.v1",
-        OrderPaid = "OrderPaid.v1"
+        OrderCreated = "CEDEOrderCreated.v1",
+        OrderCancelled = "CEDEOrderCancelled.v1",
+        OrderPaid = "CEDEOrderPaid.v1"
     }
 
     export enum Queues {
-        NotifyUser = "notification-user-order",
-        NotifyWarehouse = "warehouse-order-processing",
-        ReserveInventory = "inventory-reservation"
+        NotifyUserOrderCreated = "cede-notification-user-order-created",
+        NotifyWarehouseOrderCreated = "cede-notification-warehouse-order-created",
+        ReserveInventory = "cede-inventory-reservation"
     }
 
     export interface Mappings {

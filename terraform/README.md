@@ -1,27 +1,5 @@
-# 🌍 Infrastructure (Terraform)
-
-This folder contains the **real infrastructure definition** of the project using Terraform.
-
-It is the **single source of truth** for everything deployed to AWS.
-
-## 🧠 Purpose
-
-This layer is responsible for provisioning:
-
-- AWS Lambda functions
-- Amazon API Gateway
-- SQS / SNS (event-driven architecture)
-- IAM roles and permissions
-- Any other cloud resources
-
-Built with: Terraform
-
-## 🚀 How to deploy
-
-### 1. Initialize Terraform
-
-```bash
-terraform init
-terraform plan
-terraform apply
-```
+1. Base → S3 + DynamoDB
+2. IAM → roles e policies
+3. Lambda
+4. Mensageria → EventBridge + SQS
+5. Integrações → triggers (EventBridge → SQS → Lambda)
