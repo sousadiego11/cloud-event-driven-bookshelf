@@ -1,19 +1,14 @@
-import type { Inventory } from "../Inventory/Inventory";
 import type { Order } from "../Order/Order";
-
-export type NotificationTarget = "user" | "warehouse";
 
 export class Notification {
     id: string;
-    target: NotificationTarget;
-    targetId: string;
+    userId: string;
     message: string;
     sentAt?: Date;
 
-    constructor(id: string, target: NotificationTarget, targetId: string, message: string) {
+    constructor(id: string, userId: string, message: string) {
         this.id = id;
-        this.target = target;
-        this.targetId = targetId;
+        this.userId = userId;
         this.message = message;
     }
 
@@ -25,8 +20,7 @@ export class Notification {
     toDto() {
         return {
             id: this.id,
-            target: this.target,
-            targetId: this.targetId,
+            userId: this.userId,
             message: this.message,
             sentAt: this.sentAt,
         };
@@ -37,39 +31,20 @@ export class NotificationFactory {
     static forOrderCreated(order: ReturnType<Order["toDto"]>): Notification[] {
         return [
             new Notification(
-                `notify-user-${order.id}`,
-                "user",
-                order.userId,
-                `Seu pedido ${order.id} foi criado com sucesso!`
-            ),
-            new Notification(
-                `notify-warehouse-${order.id}`,
-                "warehouse",
-                "warehouse-1",
-                `Novo pedido ${order.id} aguardando processamento.`
-            ),
+                `notify-user-${order.Id}`,
+                order.UserId,
+                `Seu pedido ${order.Id} foi criado com sucesso!`
+            )
         ];
     }
 
     static forOrderPaid(order: ReturnType<Order["toDto"]>): Notification[] {
         return [
             new Notification(
-                `notify-user-${order.id}-paid`,
-                "user",
-                order.userId,
-                `Pagamento do pedido ${order.id} confirmado! Preparando envio.`
-            ),
-        ];
-    }
-
-    static forInventoryReserved(order: ReturnType<Order["toDto"]>): Notification[] {
-        return [
-            new Notification(
-                `notify-warehouse-inv-${order.id}`,
-                "warehouse",
-                "warehouse-1",
-                `Estoque reservado para pedido ${order.id}`
-            ),
+                `notify-user-${order.Id}-paid`,
+                order.UserId,
+                `Pagamento do pedido ${order.Id} confirmado! Preparando envio.`
+            )
         ];
     }
 }

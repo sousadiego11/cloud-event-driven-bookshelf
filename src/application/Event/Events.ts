@@ -13,7 +13,6 @@ export namespace Events {
 
     export enum Queues {
         NotifyUserOrderCreated = "cede-notification-user-order-created",
-        NotifyWarehouseOrderCreated = "cede-notification-warehouse-order-created",
         ReserveInventory = "cede-inventory-reservation"
     }
 
