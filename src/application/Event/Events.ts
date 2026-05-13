@@ -6,9 +6,9 @@ export namespace Events {
     }
 
     export enum Names {
-        OrderCreated = "CEDEOrderCreated.v1",
-        OrderCancelled = "CEDEOrderCancelled.v1",
-        OrderPaid = "CEDEOrderPaid.v1"
+        OrderCreated = "OrderCreated",
+        OrderCancelled = "OrderCancelled",
+        OrderPaid = "OrderPaid"
     }
 
     export enum Queues {

@@ -1,3 +1,5 @@
+import type { OrderDTO } from "../../application/Order/dtos/OrderDto";
+import { Id } from "../../application/Shared/Id";
 import type { Order } from "../Order/Order";
 
 export class Notification {
@@ -5,16 +7,21 @@ export class Notification {
     userId: string;
     message: string;
     sentAt?: Date;
+    createdAt: Date;
+    _updatedAt: Date;
 
-    constructor(id: string, userId: string, message: string) {
-        this.id = id;
-        this.userId = userId;
+    constructor(order: OrderDTO, message: string) {
+        this.id = Id.hash(order).getValue();
+        this.userId = order.UserId;
         this.message = message;
+        this.createdAt = new Date();
+        this._updatedAt = new Date();
     }
 
     send(): void {
         if (this.sentAt) return;
         this.sentAt = new Date();
+        this._updatedAt = new Date();
     }
 
     toDto() {
@@ -22,29 +29,18 @@ export class Notification {
             id: this.id,
             userId: this.userId,
             message: this.message,
-            sentAt: this.sentAt,
+            sentAt: this.sentAt?.toISOString(),
+            createdAt: this.createdAt.toISOString(),
+            updatedAt: this._updatedAt.toISOString(),
         };
     }
 }
 
 export class NotificationFactory {
-    static forOrderCreated(order: ReturnType<Order["toDto"]>): Notification[] {
-        return [
-            new Notification(
-                `notify-user-${order.Id}`,
-                order.UserId,
-                `Seu pedido ${order.Id} foi criado com sucesso!`
-            )
-        ];
-    }
-
-    static forOrderPaid(order: ReturnType<Order["toDto"]>): Notification[] {
-        return [
-            new Notification(
-                `notify-user-${order.Id}-paid`,
-                order.UserId,
-                `Pagamento do pedido ${order.Id} confirmado! Preparando envio.`
-            )
-        ];
+    static forOrderCreated(order: ReturnType<Order["toDto"]>): Notification {
+        return new Notification(
+            order,
+            `Seu pedido ${order.Id} foi criado com sucesso!`
+        )
     }
 }

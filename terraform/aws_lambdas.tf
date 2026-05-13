@@ -93,7 +93,7 @@ resource "aws_lambda_function" "notify_user_order_created" {
   filename         = "${path.module}/dummy-lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/dummy-lambda.zip")
 
-  handler = "aws-sqs/order_created_v1_notify_user.handler"
+  handler = "aws-sqs/notify_user_order_created.handler"
   runtime = "nodejs20.x"
 
   role = aws_iam_role.lambda_role.arn

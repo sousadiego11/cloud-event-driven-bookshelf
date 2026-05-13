@@ -1,4 +1,5 @@
-import { validate as isValidUUID } from 'uuid'; // npm i uuid @types/uuid
+import { validate as isValidUUID } from 'uuid';
+import hash from 'object-hash';
 
 export class Id {
     private constructor(private readonly value: string) {
@@ -10,6 +11,11 @@ export class Id {
     static generate(): Id {
         const uuid = crypto.randomUUID();
         return new Id(uuid);
+    }
+
+    static hash(obj: Record<string, any>): Id {
+        const hashHex = hash.sha1(obj);
+        return new Id(hashHex);
     }
 
     static create(value: string): Id {

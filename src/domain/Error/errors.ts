@@ -21,3 +21,11 @@ export class ReservationAlreadyCanceledError extends DomainError {
         Object.setPrototypeOf(this, new.target.prototype);
     }
 }
+
+export class NotificationAlreadySentError extends DomainError {
+    constructor(orderId: string) {
+        super(`Notification for order ${orderId} already sent`);
+        this.name = "NotificationAlreadySentError";
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
