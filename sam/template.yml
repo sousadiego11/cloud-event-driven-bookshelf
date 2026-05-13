@@ -61,5 +61,5 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
-      Handler: aws-sqs/order_created_v1_notify_user.handler
+      Handler: aws-sqs/notify_user_order_created.handler
       Runtime: nodejs24.x

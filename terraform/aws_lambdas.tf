@@ -24,7 +24,10 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "dynamodb:UpdateItem"
     ]
 
-    resources = [aws_dynamodb_table.orders.arn]
+    resources = [
+      aws_dynamodb_table.orders.arn,
+      aws_dynamodb_table.notifications.arn
+    ]
   }
 
   # EventBridge

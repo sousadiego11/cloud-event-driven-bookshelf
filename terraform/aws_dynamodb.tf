@@ -76,3 +76,85 @@ resource "aws_dynamodb_table" "orders" {
     Environment = "Production"
   }
 }
+
+resource "aws_dynamodb_table" "notifications" {
+  name         = "cede-notifications"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "Id"
+  range_key    = "CreatedAt"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+
+  attribute {
+    name = "UserId"
+    type = "S"
+  }
+
+  attribute {
+    name = "CreatedAt"
+    type = "S"
+  }
+
+  attribute {
+    name = "UpdatedAt"
+    type = "S"
+  }
+
+  attribute {
+    name = "SentAt"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "cede_userid_created_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "UserId"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "CreatedAt"
+      key_type       = "RANGE"
+    }
+  }
+
+  global_secondary_index {
+    name            = "cede_userid_updated_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "UserId"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "UpdatedAt"
+      key_type       = "RANGE"
+    }
+  }
+
+  global_secondary_index {
+    name            = "cede_userid_sent_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "UserId"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "SentAt"
+      key_type       = "RANGE"
+    }
+  }
+
+  tags = {
+    Name        = "CEDE Notifications Table"
+    Environment = "Production"
+  }
+}
