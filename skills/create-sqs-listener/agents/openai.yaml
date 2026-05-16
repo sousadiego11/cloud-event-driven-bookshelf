@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create SQS Listener"
+  short_description: "Criar listeners SQS padronizados"
+  default_prompt: "Use $create-sqs-listener to add a new SQS listener in this repository."
