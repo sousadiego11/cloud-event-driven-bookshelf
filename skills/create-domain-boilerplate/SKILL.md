@@ -20,7 +20,12 @@ Read `references/project-structure.md` before editing. It captures the current l
 - Use `src/application/<Domain>/dtos/*.ts` only when the DTO is a broader application/input/output contract reused beyond one repository.
 - Use PascalCase keys in DTOs: `Id`, `UserId`, `ProductId`, `CreatedAt`, `UpdatedAt`, `SentAt`.
 - Put domain-local type aliases inside `export namespace <Domain>Domain`; do not leave aliases such as `type OrderId = string` loose at module top level.
-- Do not create domain properties starting with `_`. Use names such as `status`, `updatedAt`, `currentStatus`, or private `statusValue` instead.
+- Do not create domain properties starting with `_`.
+- Keep domain state private.
+- Prefer ECMAScript private fields such as `#status` and `#updatedAt`.
+- If another class needs to read domain state, expose a focused `get` instead of making the property public.
+- Prefer simple domain property names such as `status` and `updatedAt`.
+- Avoid redundant names such as `currentStatus`, `statusValue`, or `updatedAtValue` unless there is a real conflict that cannot be modeled better.
 - Keep domain internals in idiomatic TypeScript camelCase; only DTOs use PascalCase.
 - Keep `toDto()` responsible for translating domain names to DTO names.
 
@@ -54,17 +59,21 @@ Prefer:
 
 ```ts
 export class Example {
-    readonly id: ExampleDomain.Id;
-    private currentStatus: ExampleDomain.Status;
-    readonly createdAt: Date;
-    private updatedAtValue: Date;
+    readonly #id: ExampleDomain.Id;
+    #status: ExampleDomain.Status;
+    readonly #createdAt: Date;
+    #updatedAt: Date;
+
+    get id(): ExampleDomain.Id {
+        return this.#id;
+    }
 
     toDto(): ExampleDTO {
         return {
-            Id: this.id,
-            Status: this.currentStatus,
-            CreatedAt: this.createdAt.toISOString(),
-            UpdatedAt: this.updatedAtValue.toISOString(),
+            Id: this.#id,
+            Status: this.#status,
+            CreatedAt: this.#createdAt.toISOString(),
+            UpdatedAt: this.#updatedAt.toISOString(),
         };
     }
 }
@@ -118,6 +127,8 @@ export type { IExampleRepository } from "./IExampleRepository";
 - DTO property names are PascalCase.
 - Domain-local type aliases live in `export namespace <Domain>Domain`.
 - Domain properties do not start with `_`.
+- Domain state is private by default.
+- External reads use `get` only when truly needed.
 - `toDto()` maps camelCase domain properties into PascalCase DTO keys.
 - Repository folder has `I<Domain>Repository.ts` and `index.ts`.
 - Use cases return application DTOs, not domain entities, unless the existing module already does otherwise.

@@ -7,16 +7,16 @@ export namespace InventoryDomain {
 }
 
 export class Inventory {
-    id: InventoryDomain.Id;
-    productId: InventoryDomain.ProductId;
-    total: number;
-    reserved: number;
+    readonly #id: InventoryDomain.Id;
+    readonly #productId: InventoryDomain.ProductId;
+    #total: number;
+    #reserved: number;
 
     private constructor(id: InventoryDomain.Id, productId: InventoryDomain.ProductId, total: number, reserved = 0) {
-        this.id = id;
-        this.productId = productId;
-        this.total = total;
-        this.reserved = reserved;
+        this.#id = id;
+        this.#productId = productId;
+        this.#total = total;
+        this.#reserved = reserved;
     }
 
     static create(id: InventoryDomain.Id, productId: InventoryDomain.ProductId, total: number): Inventory {
@@ -36,16 +36,16 @@ export class Inventory {
             throw new DomainError("Not enough stock");
         }
 
-        this.reserved += quantity;
+        this.#reserved += quantity;
     }
 
     release(quantity: number): void {
         if (quantity <= 0) return;
 
-        this.reserved -= quantity;
+        this.#reserved -= quantity;
 
-        if (this.reserved < 0) {
-            this.reserved = 0;
+        if (this.#reserved < 0) {
+            this.#reserved = 0;
         }
     }
 
@@ -54,24 +54,24 @@ export class Inventory {
             throw new DomainError("Quantity must be greater than zero");
         }
 
-        if (this.reserved < quantity) {
+        if (this.#reserved < quantity) {
             throw new DomainError("Not enough reserved stock to confirm");
         }
 
-        this.reserved -= quantity;
-        this.total -= quantity;
+        this.#reserved -= quantity;
+        this.#total -= quantity;
     }
 
     available(): number {
-        return this.total - this.reserved;
+        return this.#total - this.#reserved;
     }
 
     toDto(): InventoryDTO {
         return {
-            Id: this.id,
-            ProductId: this.productId,
-            Total: this.total,
-            Reserved: this.reserved,
+            Id: this.#id,
+            ProductId: this.#productId,
+            Total: this.#total,
+            Reserved: this.#reserved,
             Available: this.available(),
         };
     }
