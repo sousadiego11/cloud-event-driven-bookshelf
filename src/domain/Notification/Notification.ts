@@ -1,43 +1,49 @@
 import type { OrderDTO } from "../../application/Order/dtos/OrderDto";
+import type { NotificationDTO } from "../../application/Notification/repositories/INotificationRepository";
 import { Id } from "../../application/Shared/Id";
-import type { Order } from "../Order/Order";
+
+export namespace NotificationDomain {
+    export type Id = string;
+    export type UserId = string;
+    export type Message = string;
+}
 
 export class Notification {
-    id: string;
-    userId: string;
-    message: string;
+    id: NotificationDomain.Id;
+    userId: NotificationDomain.UserId;
+    message: NotificationDomain.Message;
     sentAt?: Date;
     createdAt: Date;
-    _updatedAt: Date;
+    updatedAt: Date;
 
-    constructor(order: OrderDTO, message: string) {
+    constructor(order: OrderDTO, message: NotificationDomain.Message) {
         this.id = Id.hash(order).getValue();
         this.userId = order.UserId;
         this.message = message;
         this.createdAt = new Date();
-        this._updatedAt = new Date();
+        this.updatedAt = new Date();
     }
 
     send(): void {
         if (this.sentAt) return;
         this.sentAt = new Date();
-        this._updatedAt = new Date();
+        this.updatedAt = new Date();
     }
 
-    toDto() {
+    toDto(): NotificationDTO {
         return {
-            id: this.id,
-            userId: this.userId,
-            message: this.message,
-            sentAt: this.sentAt?.toISOString(),
-            createdAt: this.createdAt.toISOString(),
-            updatedAt: this._updatedAt.toISOString(),
+            Id: this.id,
+            UserId: this.userId,
+            Message: this.message,
+            SentAt: this.sentAt?.toISOString(),
+            CreatedAt: this.createdAt.toISOString(),
+            UpdatedAt: this.updatedAt.toISOString(),
         };
     }
 }
 
 export class NotificationFactory {
-    static forOrderCreated(order: ReturnType<Order["toDto"]>): Notification {
+    static forOrderCreated(order: OrderDTO): Notification {
         return new Notification(
             order,
             `Seu pedido ${order.Id} foi criado com sucesso!`

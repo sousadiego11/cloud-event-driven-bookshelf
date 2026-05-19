@@ -1,26 +1,29 @@
+import type { InventoryDTO } from "../../application/Inventory/repositories/IInventoryRepository";
 import { DomainError } from "../Error/errors";
 
-type ProductIdInventory = string;
-type IdInventory = string;
+export namespace InventoryDomain {
+    export type Id = string;
+    export type ProductId = string;
+}
 
 export class Inventory {
-    id: IdInventory;
-    productId: ProductIdInventory;
+    id: InventoryDomain.Id;
+    productId: InventoryDomain.ProductId;
     total: number;
     reserved: number;
 
-    private constructor(id: IdInventory, productId: ProductIdInventory, total: number, reserved = 0) {
+    private constructor(id: InventoryDomain.Id, productId: InventoryDomain.ProductId, total: number, reserved = 0) {
         this.id = id;
         this.productId = productId;
         this.total = total;
         this.reserved = reserved;
     }
 
-    static create(id: IdInventory, productId: ProductIdInventory, total: number): Inventory {
+    static create(id: InventoryDomain.Id, productId: InventoryDomain.ProductId, total: number): Inventory {
         return new Inventory(id, productId, total, 0);
     }
 
-    static restore(id: IdInventory, productId: ProductIdInventory, total: number, reserved: number): Inventory {
+    static restore(id: InventoryDomain.Id, productId: InventoryDomain.ProductId, total: number, reserved: number): Inventory {
         return new Inventory(id, productId, total, reserved);
     }
 
@@ -63,12 +66,13 @@ export class Inventory {
         return this.total - this.reserved;
     }
 
-    toDto() {
+    toDto(): InventoryDTO {
         return {
-            productId: this.productId,
-            total: this.total,
-            reserved: this.reserved,
-            available: this.available(),
+            Id: this.id,
+            ProductId: this.productId,
+            Total: this.total,
+            Reserved: this.reserved,
+            Available: this.available(),
         };
     }
 }

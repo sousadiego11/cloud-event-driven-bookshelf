@@ -2,29 +2,32 @@ import type { OrderDTO, OrderItemDTO } from "../../application/Order/dtos/OrderD
 import { Id } from "../../application/Shared/Id";
 import { DomainError } from "../Error/errors";
 
-type OrderId = string;
-type UserId = string;
-type ProductId = string;
-type Items = Array<{ productId: ProductId; quantity: number }>;
+export namespace OrderDomain {
+    export type Id = string;
+    export type UserId = string;
+    export type ProductId = string;
+    export type Items = Array<{ productId: ProductId; quantity: number }>;
+    export type Status = "created" | "paid" | "canceled" | "shipped";
+}
 
 export class Order {
-    readonly id: OrderId;
-    readonly userId: UserId;
-    readonly items: Array<{ productId: ProductId; quantity: number }>;
-    private _status: "created" | "paid" | "canceled" | "shipped";
+    readonly id: OrderDomain.Id;
+    readonly userId: OrderDomain.UserId;
+    readonly items: OrderDomain.Items;
+    private currentStatus: OrderDomain.Status;
     readonly createdAt: Date;
-    private _updatedAt: Date;
+    private updatedAtValue: Date;
 
-    private constructor(id: OrderId, userId: UserId, items: Items) {
+    private constructor(id: OrderDomain.Id, userId: OrderDomain.UserId, items: OrderDomain.Items) {
         this.id = id;
         this.userId = userId;
         this.items = items;
-        this._status = "created";
+        this.currentStatus = "created";
         this.createdAt = new Date();
-        this._updatedAt = this.createdAt;
+        this.updatedAtValue = this.createdAt;
     }
 
-    static createFromDto(userId: UserId, items: OrderItemDTO[]): Order {
+    static createFromDto(userId: OrderDomain.UserId, items: OrderItemDTO[]): Order {
         if (!userId || userId.trim().length === 0) {
             throw new DomainError("UserId cannot be empty");
         }
@@ -47,35 +50,35 @@ export class Order {
     }
 
     get status() {
-        return this._status;
+        return this.currentStatus;
     }
 
     get updatedAt(): Date {
-        return this._updatedAt;
+        return this.updatedAtValue;
     }
 
     pay(): void {
-        if (this._status !== "created") {
-            throw new DomainError(`Cannot pay order in status: ${this._status}`);
+        if (this.currentStatus !== "created") {
+            throw new DomainError(`Cannot pay order in status: ${this.currentStatus}`);
         }
-        this._status = "paid";
-        this._updatedAt = new Date();
+        this.currentStatus = "paid";
+        this.updatedAtValue = new Date();
     }
 
     cancel(): void {
-        if (this._status === "paid") {
+        if (this.currentStatus === "paid") {
             throw new DomainError("Cannot cancel paid order");
         }
-        this._status = "canceled";
-        this._updatedAt = new Date();
+        this.currentStatus = "canceled";
+        this.updatedAtValue = new Date();
     }
 
     ship(): void {
-        if (this._status !== "paid") {
-            throw new DomainError(`Cannot ship order in status: ${this._status}`);
+        if (this.currentStatus !== "paid") {
+            throw new DomainError(`Cannot ship order in status: ${this.currentStatus}`);
         }
-        this._status = "shipped";
-        this._updatedAt = new Date();
+        this.currentStatus = "shipped";
+        this.updatedAtValue = new Date();
     }
 
     toDto(): OrderDTO {
@@ -83,9 +86,9 @@ export class Order {
             Id: this.id,
             UserId: this.userId,
             Items: this.items.map((item) => ({ ProductId: item.productId, Quantity: item.quantity })),
-            Status: this._status,
+            Status: this.currentStatus,
             CreatedAt: this.createdAt.toISOString(),
-            UpdatedAt: this._updatedAt.toISOString(),
+            UpdatedAt: this.updatedAtValue.toISOString(),
         };
     }
 }

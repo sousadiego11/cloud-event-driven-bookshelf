@@ -1,6 +1,10 @@
-import { Inventory } from "../../../domain/Inventory/Inventory";
-
-export type InventoryDTO = ReturnType<Inventory['toDto']>;
+export interface InventoryDTO {
+    Id: string;
+    ProductId: string;
+    Total: number;
+    Reserved: number;
+    Available: number;
+}
 
 export interface IInventoryRepository {
     // Create/Save operations

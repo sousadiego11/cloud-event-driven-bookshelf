@@ -19,7 +19,7 @@ export class DynamoNotificationRepository implements INotificationRepository {
     return new DynamoNotificationRepository(docClient);
   }
 
-  async findById(id: NotificationDTO['id']): Promise<NotificationDTO> {
+  async findById(id: NotificationDTO['Id']): Promise<NotificationDTO> {
     const resp = await this.docClient.send(
       new GetCommand({
         TableName: this.TABLE_NAME,
@@ -39,10 +39,10 @@ export class DynamoNotificationRepository implements INotificationRepository {
     }));
   }
 
-  async delete(id: NotificationDTO['id']): Promise<void> {
+  async delete(id: NotificationDTO['Id']): Promise<void> {
     await this.docClient.send(new DeleteCommand({
       TableName: this.TABLE_NAME,
-      Key: { id }
+      Key: { Id: id }
     }));
   }
 }

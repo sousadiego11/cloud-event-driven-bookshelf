@@ -16,7 +16,7 @@ export const handler = async (event: SQSEvent) => {
             const notifyOrderToUserUsecase = new SendOrderCreatedNotificationUsecase(notificationsRepository);
             const notification = await notifyOrderToUserUsecase.handle(detail);
 
-            Logger.log(`Notification sent to user. Notification ID: ${notification.id}, Order ID: ${detail.Id}, Source Event: ${detailType}`);
+            Logger.log(`Notification sent to user. Notification ID: ${notification.Id}, Order ID: ${detail.Id}, Source Event: ${detailType}`);
 
         } catch (error) {
             if (error instanceof NotificationAlreadySentError) {
