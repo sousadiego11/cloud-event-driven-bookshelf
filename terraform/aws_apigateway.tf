@@ -39,6 +39,18 @@ resource "aws_lambda_permission" "allow_books_api_register_book" {
 resource "aws_api_gateway_deployment" "books_api" {
   rest_api_id = aws_api_gateway_rest_api.books_api.id
 
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.books.id,
+      aws_api_gateway_method.post_books.id,
+      aws_api_gateway_integration.register_book.id,
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [
     aws_api_gateway_integration.register_book
   ]
