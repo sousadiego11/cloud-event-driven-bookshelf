@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  cede-api
+  cloud-event-driven-bookshelf
 
-  Event-driven e-commerce backend built with serverless architecture using AWS
-  services like Lambda, SNS, and SQS.
+  Event-driven virtual bookshelf backend built with serverless architecture using
+  AWS Lambda, API Gateway, EventBridge, SQS, and DynamoDB.
 
 Globals:
   Function:
@@ -12,54 +12,24 @@ Globals:
     MemorySize: 128
 
 Resources:
-  CreateOrderFunction:
+  RegisterBookFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
-      Handler: aws-apigateway/create_order.handler
+      Handler: aws-apigateway/register_book.handler
       Runtime: nodejs24.x
       Architectures:
         - x86_64
       Events:
-        CreateOrder:
+        RegisterBook:
           Type: Api
           Properties:
-            Path: /orders
+            Path: /books
             Method: post
 
-  CancelOrderFunction:
+  BookRegisteredNotifyLibraryFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
-      Handler: aws-apigateway/cancel_order.handler
-      Runtime: nodejs24.x
-      Architectures:
-        - x86_64
-      Events:
-        CancelOrder:
-          Type: Api
-          Properties:
-            Path: /orders/cancel
-            Method: post
-
-  PayOrderFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../dist
-      Handler: aws-apigateway/pay_order.handler
-      Runtime: nodejs24.x
-      Architectures:
-        - x86_64
-      Events:
-        PayOrder:
-          Type: Api
-          Properties:
-            Path: /orders/pay
-            Method: post
-
-  OrderCreatedNotifyUserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../dist
-      Handler: aws-sqs/notify_user_order_created.handler
+      Handler: aws-sqs/notify_library_book_registered.handler
       Runtime: nodejs24.x

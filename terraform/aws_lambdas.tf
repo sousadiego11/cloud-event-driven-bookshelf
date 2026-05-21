@@ -19,14 +19,11 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
 
     actions = [
       "dynamodb:PutItem",
-      "dynamodb:GetItem",
-      "dynamodb:Query",
-      "dynamodb:UpdateItem"
+      "dynamodb:DeleteItem"
     ]
 
     resources = [
-      aws_dynamodb_table.orders.arn,
-      aws_dynamodb_table.notifications.arn
+      aws_dynamodb_table.books.arn
     ]
   }
 
@@ -52,7 +49,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "sqs:SendMessage"
     ]
 
-    resources = [aws_sqs_queue.notification_user_order_created_queue.arn]
+    resources = [aws_sqs_queue.library_book_registered_queue.arn]
   }
 }
 
@@ -62,7 +59,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "cede-lambda-role"
+  name = "bookshelf-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -78,39 +75,39 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
-resource "aws_lambda_function" "create_order" {
-  function_name = "cede-create-order"
+resource "aws_lambda_function" "register_book" {
+  function_name = "bookshelf-register-book"
 
   filename         = "${path.module}/dummy-lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/dummy-lambda.zip")
 
-  handler = "aws-apigateway/create_order.handler"
+  handler = "aws-apigateway/register_book.handler"
   runtime = "nodejs20.x"
 
   role = aws_iam_role.lambda_role.arn
 }
 
-resource "aws_lambda_function" "notify_user_order_created" {
-  function_name = "cede-notify-user-order-created"
+resource "aws_lambda_function" "notify_library_book_registered" {
+  function_name = "bookshelf-notify-library-book-registered"
 
   filename         = "${path.module}/dummy-lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/dummy-lambda.zip")
 
-  handler = "aws-sqs/notify_user_order_created.handler"
+  handler = "aws-sqs/notify_library_book_registered.handler"
   runtime = "nodejs20.x"
 
   role = aws_iam_role.lambda_role.arn
 }
 
-resource "aws_lambda_event_source_mapping" "notify_user_order_created_mapping" {
-  event_source_arn = aws_sqs_queue.notification_user_order_created_queue.arn
-  function_name    = aws_lambda_function.notify_user_order_created.arn
+resource "aws_lambda_event_source_mapping" "notify_library_book_registered_mapping" {
+  event_source_arn = aws_sqs_queue.library_book_registered_queue.arn
+  function_name    = aws_lambda_function.notify_library_book_registered.arn
 
   depends_on = [
     aws_iam_role_policy.lambda_policy
   ]
 
   tags = {
-    Name = "NotifyUserOrderCreatedMapping"
+    Name = "NotifyLibraryBookRegisteredMapping"
   }
 }

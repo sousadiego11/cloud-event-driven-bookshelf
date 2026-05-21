@@ -1,15 +1,15 @@
-resource "aws_cloudwatch_event_rule" "order_created_rule" {
-  name        = "cede-order-created"
-  description = "Captures OrderCreated events from the e-commerce application"
+resource "aws_cloudwatch_event_rule" "book_registered_rule" {
+  name        = "bookshelf-book-registered"
+  description = "Captures BookRegistered events from the virtual bookshelf application"
 
   event_pattern = jsonencode({
-    source      = ["cede.orders"]
-    detail-type = ["OrderCreated"]
+    source      = ["bookshelf.books"]
+    detail-type = ["BookRegistered"]
   })
 }
 
-resource "aws_cloudwatch_event_target" "send_to_sqs_order_created_queue" {
-  rule      = aws_cloudwatch_event_rule.order_created_rule.name
-  target_id = "SendToSQSOrderCreatedQueue"
-  arn       = aws_sqs_queue.notification_user_order_created_queue.arn
+resource "aws_cloudwatch_event_target" "send_to_sqs_book_registered_queue" {
+  rule      = aws_cloudwatch_event_rule.book_registered_rule.name
+  target_id = "SendToSQSBookRegisteredQueue"
+  arn       = aws_sqs_queue.library_book_registered_queue.arn
 }

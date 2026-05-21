@@ -1,24 +1,19 @@
-import type { OrderDTO } from "../Order/dtos/OrderDto";
+import type { BookDTO } from "../Book/dtos/BookDto";
 
 export namespace Events {
     export enum Source {
-        Orders = "cede.orders"
+        Books = "bookshelf.books"
     }
 
     export enum Names {
-        OrderCreated = "OrderCreated",
-        OrderCancelled = "OrderCancelled",
-        OrderPaid = "OrderPaid"
+        BookRegistered = "BookRegistered"
     }
 
     export enum Queues {
-        NotifyUserOrderCreated = "cede-notification-user-order-created",
-        ReserveInventory = "cede-inventory-reservation"
+        NotifyLibraryBookRegistered = "bookshelf-library-book-registered"
     }
 
     export interface Mappings {
-        [Events.Names.OrderCreated]: OrderDTO;
-        [Events.Names.OrderCancelled]: OrderDTO;
-        [Events.Names.OrderPaid]: OrderDTO;
+        [Events.Names.BookRegistered]: BookDTO;
     }
 }

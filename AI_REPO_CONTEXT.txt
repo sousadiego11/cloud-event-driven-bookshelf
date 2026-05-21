@@ -6,8 +6,16 @@ Purpose
 - Read this before broad code changes.
 
 Project Summary
-- Event-driven ecommerce backend.
-- Main stack: TypeScript, AWS Lambda, SQS, EventBridge, DynamoDB, Terraform.
+- Event-driven virtual bookshelf backend.
+- Project name: `cloud-event-driven-bookshelf`.
+- Current simplified flow:
+  - API Gateway receives `POST /books`.
+  - Lambda handler registers a book.
+  - Register use case persists the book in DynamoDB.
+  - Register use case publishes `BookRegistered` to EventBridge.
+  - EventBridge routes the event to SQS.
+  - SQS listener notifies the library by logging the registered book.
+- Main stack: TypeScript, AWS Lambda, API Gateway, SQS, EventBridge, DynamoDB, Terraform.
 - Source code lives mainly in `src/`.
 - Infra code lives in `terraform/`.
 
@@ -17,11 +25,33 @@ Current High-Level Structure
 - `src/application/`
   - Use cases, DTOs, repository interfaces, shared app utilities, event definitions.
 - `src/infrastructure/`
-  - AWS/DynamoDB implementations.
+  - AWS/EventBridge/DynamoDB implementations.
 - `src/presentation/`
   - Lambda handlers for API Gateway and SQS.
 - `skills/`
   - Local Codex skills documenting repo-specific workflows and patterns.
+
+Current Practical Structure Snapshot
+- `src/domain/`
+  - `Book/Book.ts`
+  - `Error/errors.ts`
+- `src/application/`
+  - `Book/dtos/BookDto.ts`
+  - `Book/repositories/IBookRepository.ts`
+  - `Book/repositories/index.ts`
+  - `Book/Usecase/RegisterBookUsecase.ts`
+  - `Event/EventPublisher.ts`
+  - `Event/Events.ts`
+  - `Shared/Id.ts`
+  - `Shared/Usecase.ts`
+- `src/infrastructure/`
+  - `aws-dynamodb-client/dynamodb-client.ts`
+  - `aws-dynamodb-repositories/dynamodb-books-repository.ts`
+  - `aws-eventbridge/eventbridge-publisher.ts`
+  - `http/ApiResponse.ts`
+- `src/presentation/`
+  - `aws-apigateway/register_book.ts`
+  - `aws-sqs/notify_library_book_registered.ts`
 
 Important Domain/Application Conventions
 - Domain file path pattern:
@@ -37,89 +67,40 @@ Important Domain/Application Conventions
 
 DTO Rules
 - DTOs do NOT belong in `src/domain`.
-- Repository-local DTOs should usually live in:
-  - `src/application/<Domain>/repositories/I<Domain>Repository.ts`
 - Broader application/event/input-output DTOs may live in:
   - `src/application/<Domain>/dtos/*.ts`
+- Repository-local DTOs should usually live in:
+  - `src/application/<Domain>/repositories/I<Domain>Repository.ts`
 - DTO property names must be PascalCase.
-- Examples:
+- Current `BookDTO` keys:
   - `Id`
-  - `UserId`
-  - `ProductId`
-  - `CreatedAt`
+  - `Title`
+  - `Author`
+  - `Isbn`
+  - `RegisteredAt`
   - `UpdatedAt`
-  - `SentAt`
 
 Domain Code Rules
 - Domain internal properties use camelCase.
 - Domain state should be private by default.
-- Prefer ECMAScript private fields such as `#status`, `#updatedAt`, `#id`.
+- Prefer ECMAScript private fields such as `#id`, `#title`, `#registeredAt`.
 - If outside code needs to read a domain value, expose a `get` instead of making the field public.
 - Do NOT use underscore-prefixed properties in domain classes.
-- Avoid patterns like:
-  - `_status`
-  - `_updatedAt`
-- Prefer simple names like:
-  - `status`
-  - `updatedAt`
-- Avoid redundant names like:
-  - `currentStatus`
-  - `statusValue`
-  - `updatedAtValue`
-
-Domain Type Alias Rules
-- Do not leave loose top-level aliases such as:
-  - `type OrderId = string`
-  - `type UserId = string`
-- Put domain-local aliases inside:
-  - `export namespace <Domain>Domain`
-- Example:
-  - `OrderDomain`
-  - `InventoryDomain`
-  - `NotificationDomain`
+- Domain-local type aliases live inside `export namespace <Domain>Domain`.
 
 Mapping Rules
 - Domain entities may use camelCase properties internally.
 - `toDto()` is responsible for mapping domain names to PascalCase DTO keys.
 - Keep mapping explicit and predictable.
 
-Current Known Good Examples
-- `src/domain/Order/Order.ts`
-- `src/domain/Inventory/Inventory.ts`
-- `src/domain/Notification/Notification.ts`
-- `src/application/Order/dtos/OrderDto.ts`
-- `src/application/Notification/repositories/INotificationRepository.ts`
-- `src/application/Inventory/repositories/IInventoryRepository.ts`
-
-Current Practical Structure Snapshot
-- `src/domain/`
-  - `Error/errors.ts`
-  - `Inventory/Inventory.ts`
-  - `Notification/Notification.ts`
-  - `Order/Order.ts`
-- `src/application/`
-  - `Event/EventPublisher.ts`
-  - `Event/Events.ts`
-  - `Inventory/repositories/`
-  - `Notification/repositories/`
-  - `Notification/Usecase/`
-  - `Order/dtos/`
-  - `Order/repositories/`
-  - `Order/Usecase/`
-  - `Payment/repositories/`
-  - `Shipment/repositories/`
-  - `Shared/`
-
-Important Architectural Notes
-- Domain contains business rules and state transitions.
-- Application use cases orchestrate flows.
-- Repository interfaces belong to application layer.
-- Infrastructure implements repository contracts.
-- Presentation handlers parse input, instantiate dependencies, call use cases, log, and handle expected errors.
-
-SQS/Event Notes
-- Existing SQS listener pattern is documented in:
-  - `skills/create-sqs-listener/SKILL.md`
+Current Event/SQS Notes
+- `src/application/Event/Events.ts` is the source of truth.
+- Current event source:
+  - `bookshelf.books`
+- Current event name:
+  - `BookRegistered`
+- Current queue:
+  - `bookshelf-library-book-registered`
 - Event and queue naming should stay aligned across:
   - `src/application/Event/Events.ts`
   - handlers in `src/presentation/aws-sqs/`
@@ -127,11 +108,11 @@ SQS/Event Notes
 
 Terraform Attention Points
 - DynamoDB table/index names must match repository assumptions.
-- Follow existing Terraform style for DynamoDB GSIs.
-- Before changing persistence contracts, inspect:
-  - `terraform/aws_dynamodb.tf`
-  - related repository implementation
-  - related DTO contract
+- Current table:
+  - `bookshelf-books`
+- Follow existing Terraform style for DynamoDB GSIs:
+  - explicit `attribute` blocks
+  - `key_schema` inside `global_secondary_index`
 
 Before Editing a Module
 - Check whether a DTO already exists and where it belongs.
@@ -140,23 +121,6 @@ Before Editing a Module
 - Check whether any property name violates the no-underscore rule.
 - Check whether `toDto()` returns PascalCase keys.
 - Check whether the repository `index.ts` export matches current project style.
-
-When Creating a New Domain Module
-- Create domain class in `src/domain/<Domain>/<Domain>.ts`
-- Create `export namespace <Domain>Domain` for local type aliases.
-- Create repository interface in `src/application/<Domain>/repositories/I<Domain>Repository.ts`
-- Create `index.ts` in repository folder.
-- Add `Usecase/` only if there is application orchestration to implement.
-- Place DTO in repository file unless it is a broader cross-layer contract.
-
-Token Saving Tips For Agents
-- Read this file first.
-- Then read only the closest matching module instead of scanning the whole repo.
-- Prefer copying structure from nearest existing module.
-- For new domain/application boilerplate, consult:
-  - `skills/create-domain-boilerplate/SKILL.md`
-- For new SQS consumers, consult:
-  - `skills/create-sqs-listener/SKILL.md`
 
 Known Environment Note
 - Local validation commands may depend on tools not available in PATH in every session.

@@ -1,17 +1,9 @@
-### Create Order - POST /orders
-POST http://127.0.0.1:3000/orders
+### Register Book - POST /books
+POST http://127.0.0.1:3000/books
 Content-Type: application/json
 
 {
-  "userId": "user-123",
-  "items": [
-    { 
-      "productId": "prod-1", 
-      "quantity": 2 
-    },
-    { 
-      "productId": "prod-2", 
-      "quantity": 1 
-    }
-  ]
+  "Title": "Clean Architecture",
+  "Author": "Robert C. Martin",
+  "Isbn": "9780134494166"
 }

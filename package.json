@@ -1,13 +1,13 @@
 {
-  "name": "cloud-event-driven-ecommerce",
-  "description": "Event-driven e-commerce backend built with serverless architecture using AWS services like Lambda, SNS, and SQS.",
+  "name": "cloud-event-driven-bookshelf",
+  "description": "Event-driven virtual bookshelf backend built with serverless architecture using AWS services like Lambda, EventBridge, SQS, and DynamoDB.",
   "module": "app.ts",
   "type": "module",
   "private": true,
   "scripts": {
     "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
     "start:gateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml",
-    "invoke:notify": "bun run build:lambdas && cd ./sam && sam local invoke OrderCreatedNotifyUserFunction -e ./events/order-created-sqs-evt.json "
+    "invoke:notify": "bun run build:lambdas && cd ./sam && sam local invoke BookRegisteredNotifyLibraryFunction -e ./events/book-registered-sqs-evt.json "
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.161",

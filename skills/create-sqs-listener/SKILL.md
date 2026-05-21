@@ -1,11 +1,11 @@
 ---
 name: create-sqs-listener
-description: Create or update SQS queue listeners in this ecommerce repository following the existing project pattern. Use when Codex needs to add a new SQS consumer, wire a new queue to a Lambda, create or update the related use case and DynamoDB repository, adjust Terraform in aws_sqs.tf/aws_lambdas.tf/aws_dynamodb.tf/aws_eventbridge.tf, or keep Events.ts as the source of truth for event and queue names. Always confirm whether the DTO or its validation schema should change before editing DTO-related files.
+description: Create or update SQS queue listeners in this virtual bookshelf repository following the existing project pattern. Use when Codex needs to add a new SQS consumer, wire a new queue to a Lambda, create or update the related use case and DynamoDB repository, adjust Terraform in aws_sqs.tf/aws_lambdas.tf/aws_dynamodb.tf/aws_eventbridge.tf, or keep Events.ts as the source of truth for event and queue names. Always confirm whether the DTO or its validation schema should change before editing DTO-related files.
 ---
 
 # Create SQS Listener
 
-Use the repository pattern already established by `notify_user_order_created`.
+Use the repository pattern already established by `notify_library_book_registered`.
 
 Read `references/project-patterns.md` before editing when the request involves a new queue, a new Lambda consumer, or Terraform wiring.
 
@@ -45,7 +45,7 @@ If the user does not ask for a DTO change, preserve the existing contract and on
 - Reuse `parseSqsRecord` for EventBridge-style envelopes delivered through SQS.
 - Prefer existing DTOs and schemas when compatible.
 - If a new schema is needed, place it where the repository already keeps related validation logic, or extract it to a reusable module if the same schema is consumed by more than one handler.
-- Keep DTO property names aligned with the project contract style. For repository-facing/domain DTOs in this codebase, prefer PascalCase keys such as `Id`, `ProductId`, `Total`, `Reserved`.
+- Keep DTO property names aligned with the project contract style. For repository-facing/domain DTOs in this codebase, prefer PascalCase keys such as `Id`, `Title`, `Author`, `RegisteredAt`.
 - When rebuilding an aggregate from persistence, prefer a single factory such as `create(...)` that already accepts the persisted fields the aggregate needs. Do not introduce a separate `restore(...)` unless the user explicitly asks for it.
 - When a use case needs a domain-specific failure branch, create a custom domain error class in `src/domain/Error/errors.ts` instead of throwing `DomainError` directly from the use case.
 - Keep naming aligned with the existing convention:

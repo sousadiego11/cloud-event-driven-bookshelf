@@ -1,6 +1,6 @@
 ---
 name: create-domain-boilerplate
-description: Create or update domain and application boilerplate in this ecommerce repository. Use when Codex needs to add a new domain aggregate/entity, define repository interfaces, DTO contracts, use cases, indexes, or application folders under src/domain and src/application while following this repo's conventions: DTOs live in application/repository or application/dtos folders, DTO properties are PascalCase, domain types live inside exported <Domain>Domain namespaces, and domain properties must not use underscore-prefixed names.
+description: Create or update domain and application boilerplate in this virtual bookshelf repository. Use when Codex needs to add a new domain aggregate/entity, define repository interfaces, DTO contracts, use cases, indexes, or application folders under src/domain and src/application while following this repo's conventions: DTOs live in application/repository or application/dtos folders, DTO properties are PascalCase, domain types live inside exported <Domain>Domain namespaces, and domain properties must not use underscore-prefixed names.
 ---
 
 # Create Domain Boilerplate
@@ -18,8 +18,8 @@ Read `references/project-structure.md` before editing. It captures the current l
 - Put DTO types with the application contract, not inside the domain folder.
 - Prefer declaring repository-facing DTOs in the repository interface file when the DTO only exists for persistence/repository use.
 - Use `src/application/<Domain>/dtos/*.ts` only when the DTO is a broader application/input/output contract reused beyond one repository.
-- Use PascalCase keys in DTOs: `Id`, `UserId`, `ProductId`, `CreatedAt`, `UpdatedAt`, `SentAt`.
-- Put domain-local type aliases inside `export namespace <Domain>Domain`; do not leave aliases such as `type OrderId = string` loose at module top level.
+- Use PascalCase keys in DTOs: `Id`, `Title`, `Author`, `RegisteredAt`, `UpdatedAt`.
+- Put domain-local type aliases inside `export namespace <Domain>Domain`; do not leave aliases such as `type BookId = string` loose at module top level.
 - Do not create domain properties starting with `_`.
 - Keep domain state private.
 - Prefer ECMAScript private fields such as `#status` and `#updatedAt`.

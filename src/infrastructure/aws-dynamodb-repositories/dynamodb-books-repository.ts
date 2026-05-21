@@ -4,31 +4,31 @@ import {
   PutCommand
 } from "@aws-sdk/lib-dynamodb";
 
-import type { IOrderRepository } from "../../application/Order/repositories";
-import type { OrderDTO } from "../../application/Order/dtos/OrderDto";
+import type { BookDTO } from "../../application/Book/dtos/BookDto";
+import type { IBookRepository } from "../../application/Book/repositories";
 
-export class DynamoOrderRepository implements IOrderRepository {
-  private TABLE_NAME = "cede-orders";
+export class DynamoBookRepository implements IBookRepository {
+  private TABLE_NAME = "bookshelf-books";
 
   private constructor(
     private readonly docClient: DynamoDBDocumentClient
   ) { }
 
   static async create(docClient: DynamoDBDocumentClient) {
-    return new DynamoOrderRepository(docClient);
+    return new DynamoBookRepository(docClient);
   }
 
-  async save(order: OrderDTO): Promise<void> {
+  async save(book: BookDTO): Promise<void> {
     await this.docClient.send(new PutCommand({
       TableName: this.TABLE_NAME,
-      Item: order
+      Item: book
     }));
   }
 
   async delete(id: string): Promise<void> {
     await this.docClient.send(new DeleteCommand({
       TableName: this.TABLE_NAME,
-      Key: { id }
+      Key: { Id: id }
     }));
   }
 }

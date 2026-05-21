@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "cloud-event-driven-ecommerce",
+      "name": "cloud-event-driven-bookshelf",
       "dependencies": {
         "@aws-sdk/client-dynamodb": "^3.1032.0",
         "@aws-sdk/client-eventbridge": "^3.1033.0",

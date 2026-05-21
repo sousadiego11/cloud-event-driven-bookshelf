@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "lambdas" {
-  bucket = "cede-lambdas-bucket"
+  bucket = "bookshelf-lambdas-bucket"
 
   tags = {
-    Name        = "CEDE Lambdas Bucket"
+    Name        = "Bookshelf Lambdas Bucket"
     Environment = "Production"
   }
 }
