@@ -31,6 +31,14 @@ Current High-Level Structure
 - `skills/`
   - Local Codex skills documenting repo-specific workflows and patterns.
 
+Local Skills
+- For new domain/application boilerplate, consult:
+  - `skills/create-domain-boilerplate/SKILL.md`
+- For new API Gateway routes, consult:
+  - `skills/create-apigateway-route/SKILL.md`
+- For new SQS consumers, consult:
+  - `skills/create-sqs-listener/SKILL.md`
+
 Current Practical Structure Snapshot
 - `src/domain/`
   - `Book/Book.ts`
@@ -52,6 +60,7 @@ Current Practical Structure Snapshot
 - `src/presentation/`
   - `aws-apigateway/register_book.ts`
   - `aws-sqs/notify_library_book_registered.ts`
+  - `zod/BookSchemas.ts`
 
 Important Domain/Application Conventions
 - Domain file path pattern:

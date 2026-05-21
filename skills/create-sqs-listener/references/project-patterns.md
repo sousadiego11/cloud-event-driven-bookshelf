@@ -35,7 +35,7 @@ Current flow:
 6. Lambda receives an SQS event.
 7. Handler parses each record with `parseSqsRecord`.
 8. The message body contains an EventBridge envelope with `detail-type` and `detail`.
-9. The handler validates `detail` with `BookRegisteredSchema`.
+9. The handler validates `detail` with `BookDTOSchema`.
 10. The handler logs a library notification.
 
 ## DTO and schema rule
@@ -45,8 +45,8 @@ Always confirm whether the DTO or schema must change before editing any existing
 Current example:
 
 - `BookDTO` lives in `src/application/Book/dtos/BookDto.ts`
-- `RegisterBookSchema` and `BookRegisteredSchema` live in `src/presentation/aws-apigateway/register_book.ts`
-- the SQS handler currently reuses `BookRegisteredSchema`
+- `RegisterBookSchema` and `BookDTOSchema` live in `src/presentation/zod/BookSchemas.ts`
+- the SQS handler currently reuses `BookDTOSchema`
 
 If a new listener reuses the same payload contract, keep the DTO and schema unchanged.
 

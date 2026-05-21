@@ -5,7 +5,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/**/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
+    "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/aws-apigateway/*.ts ./src/presentation/aws-sqs/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
     "start:gateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml",
     "invoke:notify": "bun run build:lambdas && cd ./sam && sam local invoke BookRegisteredNotifyLibraryFunction -e ./events/book-registered-sqs-evt.json "
   },

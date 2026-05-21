@@ -1,12 +1,13 @@
 import type { SQSEvent } from "aws-lambda";
+import type { BookDTO } from "../../application/Book/dtos/BookDto";
 import { Logger } from "../../shared/logger";
 import { parseSqsRecord } from "../../shared/parseSqsEvent";
-import { BookRegisteredSchema } from "../aws-apigateway/register_book";
+import { BookDTOSchema } from "../zod/BookSchemas";
 
 export const handler = async (event: SQSEvent) => {
     for (const record of event.Records) {
         try {
-            const { detail, detailType } = parseSqsRecord(record, BookRegisteredSchema);
+            const { detail, detailType } = parseSqsRecord<BookDTO>(record, BookDTOSchema);
 
             Logger.log("Library notified about a new registered book", {
                 BookId: detail.Id,

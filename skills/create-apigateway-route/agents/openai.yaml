@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create API Gateway Route"
+  short_description: "Criar rotas API Gateway padronizadas"
+  default_prompt: "Use $create-apigateway-route to add a new API Gateway route in this repository."
