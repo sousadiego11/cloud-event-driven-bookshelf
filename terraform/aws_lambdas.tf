@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "sqs:SendMessage"
     ]
 
-    resources = [aws_sqs_queue.library_book_registered_queue.arn]
+    resources = [aws_sqs_queue.notify_library_book_registered.arn]
   }
 }
 
@@ -100,7 +100,7 @@ resource "aws_lambda_function" "notify_library_book_registered" {
 }
 
 resource "aws_lambda_event_source_mapping" "notify_library_book_registered_mapping" {
-  event_source_arn = aws_sqs_queue.library_book_registered_queue.arn
+  event_source_arn = aws_sqs_queue.notify_library_book_registered.arn
   function_name    = aws_lambda_function.notify_library_book_registered.arn
 
   depends_on = [

@@ -13,7 +13,7 @@
       "messageAttributes": {},
       "md5OfBody": "local",
       "eventSource": "aws:sqs",
-      "eventSourceARN": "arn:aws:sqs:us-east-1:000000000000:bookshelf-library-book-registered",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:000000000000:bookshelf-notify-library-book-registered",
       "awsRegion": "us-east-1"
     }
   ]

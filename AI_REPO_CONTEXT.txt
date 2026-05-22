@@ -109,7 +109,7 @@ Current Event/SQS Notes
 - Current event name:
   - `BookRegistered`
 - Current queue:
-  - `bookshelf-library-book-registered`
+  - `bookshelf-notify-library-book-registered`
 - Event and queue naming should stay aligned across:
   - `src/application/Event/Events.ts`
   - handlers in `src/presentation/aws-sqs/`
