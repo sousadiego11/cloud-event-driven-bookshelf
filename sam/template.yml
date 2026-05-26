@@ -27,6 +27,21 @@ Resources:
             Path: /books
             Method: post
 
+  RegisterLoanFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/register_loan.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        RegisterLoan:
+          Type: Api
+          Properties:
+            Path: /loans
+            Method: post
+
   BookRegisteredNotifyLibraryFunction:
     Type: AWS::Serverless::Function
     Properties:

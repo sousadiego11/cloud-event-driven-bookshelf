@@ -23,7 +23,8 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
     ]
 
     resources = [
-      aws_dynamodb_table.books.arn
+      aws_dynamodb_table.books.arn,
+      aws_dynamodb_table.loans.arn
     ]
   }
 
@@ -82,6 +83,18 @@ resource "aws_lambda_function" "register_book" {
   source_code_hash = filebase64sha256("${path.module}/dummy-lambda.zip")
 
   handler = "aws-apigateway/register_book.handler"
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+}
+
+resource "aws_lambda_function" "register_loan" {
+  function_name = "bookshelf-register-loan"
+
+  filename         = "${path.module}/dummy-lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/dummy-lambda.zip")
+
+  handler = "aws-apigateway/register_loan.handler"
   runtime = "nodejs20.x"
 
   role = aws_iam_role.lambda_role.arn
