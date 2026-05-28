@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import z, { ZodError } from "zod";
 import { DomainError } from "../../domain/Error/errors";
 
 export class ApiResponse {
@@ -23,7 +23,7 @@ export class ApiResponse {
                 statusCode: 400,
                 body: JSON.stringify({
                     error: "Validation error",
-                    details: error.format(),
+                    details: z.treeifyError(error),
                 }),
             };
         }
