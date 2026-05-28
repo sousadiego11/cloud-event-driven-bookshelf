@@ -1,58 +1,38 @@
 # API Gateway Route Patterns
 
-Use this reference when adding an HTTP route in this repository.
+Use this reference when adding or modifying HTTP transport in this repository.
 
-## Current route
+## Current route examples
 
-Main example:
-
-- Handler: `src/presentation/aws-apigateway/register_book.ts`
-- Zod schemas: `src/presentation/zod/BookSchemas.ts`
-- Use case: `src/application/Book/Usecase/RegisterBookUsecase.ts`
-- DTO: `src/application/Book/dtos/BookDto.ts`
-- Repository implementation: `src/infrastructure/aws-dynamodb-repositories/dynamodb-books-repository.ts`
+- Book handler: `src/presentation/aws-apigateway/register_book.ts`
+- Loan handler: `src/presentation/aws-apigateway/register_loan.ts`
+- Zod schemas: `src/presentation/zod/*Schemas.ts`
 - Lambda Terraform: `terraform/aws_lambdas.tf`
 - API Gateway Terraform: `terraform/aws_apigateway.tf`
 - SAM local route: `sam/template.yml`
-- Manual request example: `src/presentation/aws-apigateway/util/test.http`
+- Manual request examples: `src/presentation/aws-apigateway/samples.http`
 
 ## Current flow
 
-1. API Gateway receives `POST /books`.
+1. API Gateway receives the HTTP request.
 2. Lambda handler parses `evt.body` with `parseBody` and a Zod schema from `src/presentation/zod`.
-3. Handler creates infrastructure dependencies.
-4. Handler creates the use case.
-5. Use case creates/updates domain state.
-6. Use case persists through the repository.
-7. Use case publishes an EventBridge event when the route starts an async flow.
-8. Handler returns through `ApiResponse`.
+3. Handler instantiates existing infrastructure dependencies.
+4. Handler instantiates an existing application use case.
+5. Use case owns business orchestration and persistence.
+6. Handler returns through `ApiResponse`.
 
-## Current `register_book` contract
+## Boundary with domain skill
 
-Request schema:
+Do not create or modify these from this skill:
 
-```ts
-export const RegisterBookSchema = z.object({
-    Title: z.string().min(1),
-    Author: z.string().min(1),
-    Isbn: z.string().min(1).optional(),
-});
-```
+- `src/domain/**`
+- `src/application/<Domain>/Usecase/**`
+- `src/application/<Domain>/repositories/**`
+- `src/infrastructure/aws-dynamodb-repositories/**`
+- `terraform/aws_dynamodb.tf`
+- DynamoDB table ARNs in `terraform/aws_lambdas.tf`
 
-Response and event detail use `BookDTO` and `BookDTOSchema`:
-
-```ts
-export interface BookDTO {
-    Id: string;
-    Title: string;
-    Author: string;
-    Isbn?: string;
-    RegisteredAt: string;
-    UpdatedAt: string;
-}
-```
-
-Keep schemas in `src/presentation/zod/*.ts` so API Gateway handlers and SQS listeners do not import from each other.
+If any of those are needed, use `$create-domain-boilerplate` first.
 
 ## Terraform checklist
 
@@ -60,12 +40,12 @@ For each new route, check whether to update:
 
 - `terraform/aws_lambdas.tf`
   - Add `aws_lambda_function`.
-  - Add IAM permissions only when the route needs new AWS actions/resources.
+  - Do not add DynamoDB table IAM permissions here for route work.
 - `terraform/aws_apigateway.tf`
   - Add `aws_api_gateway_resource` when the path is new.
   - Add `aws_api_gateway_method`.
   - Add `aws_api_gateway_integration`.
-  - Add `aws_lambda_permission`.
+  - Add `aws_lambda_permission` for API Gateway invoke access.
   - Add the new resource/method/integration IDs to `aws_api_gateway_deployment.books_api.triggers.redeployment`.
 - `sam/template.yml`
   - Add an `AWS::Serverless::Function` event for local API testing.
@@ -78,7 +58,6 @@ For each new route, check whether to update:
 - API Gateway Terraform method: include HTTP verb and resource, for example `post_books`.
 - Integration resource: use the route action name, for example `register_book`.
 - Permission resource: `allow_books_api_<route_name>`.
-- Use case class: PascalCase ending in `Usecase`, for example `RegisterBookUsecase`.
 
 ## Validation
 
@@ -92,6 +71,6 @@ bun run build:lambdas
 If Terraform is available:
 
 ```powershell
-terraform -chdir=terraform fmt
+terraform -chdir=terraform fmt -check
 terraform -chdir=terraform validate
 ```

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Create API Domain Boilerplate"
-  short_description: "Criar Estrutura padrão de Domínio"
-  default_prompt: "Use $create-domain-boilerplate to add a new domain in this repository."
+  display_name: "Create Domain Persistence"
+  short_description: "Criar domínio, repositório e tabela DynamoDB"
+  default_prompt: "Use $create-domain-boilerplate to add a new persisted domain in this repository."

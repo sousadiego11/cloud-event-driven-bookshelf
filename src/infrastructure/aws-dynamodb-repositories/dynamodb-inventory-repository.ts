@@ -5,39 +5,39 @@ import {
   QueryCommand
 } from "@aws-sdk/lib-dynamodb";
 
-import type { BookDTO } from "../../application/Book/dtos/BookDto";
-import type { IBookRepository } from "../../application/Book/repositories";
+import type { InventoryDTO } from "../../application/Inventory/dtos/InventoryDto";
+import type { IInventoryRepository } from "../../application/Inventory/repositories";
 
-export class DynamoBookRepository implements IBookRepository {
-  private TABLE_NAME = "bookshelf-books";
+export class DynamoInventoryRepository implements IInventoryRepository {
+  private TABLE_NAME = "bookshelf-inventory";
 
   private constructor(
     private readonly docClient: DynamoDBDocumentClient
   ) { }
 
   static async create(docClient: DynamoDBDocumentClient) {
-    return new DynamoBookRepository(docClient);
+    return new DynamoInventoryRepository(docClient);
   }
 
-  async save(book: BookDTO): Promise<void> {
+  async save(inventory: InventoryDTO): Promise<void> {
     await this.docClient.send(new PutCommand({
       TableName: this.TABLE_NAME,
-      Item: book
+      Item: inventory
     }));
   }
 
-  async findByIsbn(isbn: string): Promise<BookDTO | null> {
+  async findByBookId(bookId: string): Promise<InventoryDTO | null> {
     const result = await this.docClient.send(new QueryCommand({
       TableName: this.TABLE_NAME,
-      IndexName: "bookshelf_isbn_idx",
-      KeyConditionExpression: "Isbn = :isbn",
+      IndexName: "bookshelf_inventory_book_idx",
+      KeyConditionExpression: "BookId = :bookId",
       ExpressionAttributeValues: {
-        ":isbn": isbn
+        ":bookId": bookId
       },
       Limit: 1
     }));
 
-    return result.Items?.[0] as BookDTO | undefined ?? null;
+    return result.Items?.[0] as InventoryDTO | undefined ?? null;
   }
 
   async delete(id: string): Promise<void> {

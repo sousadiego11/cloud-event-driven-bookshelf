@@ -14,6 +14,11 @@ resource "aws_dynamodb_table" "books" {
   }
 
   attribute {
+    name = "Isbn"
+    type = "S"
+  }
+
+  attribute {
     name = "RegisteredAt"
     type = "S"
   }
@@ -30,6 +35,16 @@ resource "aws_dynamodb_table" "books" {
     key_schema {
       attribute_name = "RegisteredAt"
       key_type       = "RANGE"
+    }
+  }
+
+  global_secondary_index {
+    name            = "bookshelf_isbn_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "Isbn"
+      key_type       = "HASH"
     }
   }
 
@@ -96,6 +111,37 @@ resource "aws_dynamodb_table" "loans" {
 
   tags = {
     Name        = "Bookshelf Loans Table"
+    Environment = "Production"
+  }
+}
+
+resource "aws_dynamodb_table" "inventory" {
+  name         = "bookshelf-inventory"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "Id"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+
+  attribute {
+    name = "BookId"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "bookshelf_inventory_book_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "BookId"
+      key_type       = "HASH"
+    }
+  }
+
+  tags = {
+    Name        = "Bookshelf Inventory Table"
     Environment = "Production"
   }
 }

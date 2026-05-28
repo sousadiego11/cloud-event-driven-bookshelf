@@ -13,7 +13,7 @@ export class Book {
     readonly #id: BookDomain.Id;
     readonly #title: BookDomain.Title;
     readonly #author: BookDomain.Author;
-    readonly #isbn?: BookDomain.Isbn;
+    readonly #isbn: BookDomain.Isbn;
     readonly #registeredAt: Date;
     #updatedAt: Date;
 
@@ -21,7 +21,7 @@ export class Book {
         id: BookDomain.Id,
         title: BookDomain.Title,
         author: BookDomain.Author,
-        isbn: BookDomain.Isbn | undefined,
+        isbn: BookDomain.Isbn,
         registeredAt: Date
     ) {
         this.#id = id;
@@ -32,10 +32,10 @@ export class Book {
         this.#updatedAt = registeredAt;
     }
 
-    static register(title: BookDomain.Title, author: BookDomain.Author, isbn?: BookDomain.Isbn): Book {
+    static register(title: BookDomain.Title, author: BookDomain.Author, isbn: BookDomain.Isbn): Book {
         const normalizedTitle = title.trim();
         const normalizedAuthor = author.trim();
-        const normalizedIsbn = isbn?.trim();
+        const normalizedIsbn = isbn.trim();
 
         if (!normalizedTitle) {
             throw new DomainError("Title cannot be empty");
@@ -45,8 +45,8 @@ export class Book {
             throw new DomainError("Author cannot be empty");
         }
 
-        if (normalizedIsbn !== undefined && normalizedIsbn.length === 0) {
-            throw new DomainError("Isbn cannot be empty when provided");
+        if (!normalizedIsbn) {
+            throw new DomainError("Isbn cannot be empty");
         }
 
         const id = Id.generate();

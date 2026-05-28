@@ -2,6 +2,7 @@ import type { APIGatewayProxyEvent } from "aws-lambda";
 import { RegisterLoanUsecase } from "../../application/Loan/Usecase/RegisterLoanUsecase";
 import type { RegisterLoanInput } from "../../application/Loan/Usecase/RegisterLoanUsecase";
 import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
+import { DynamoInventoryRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-inventory-repository";
 import { DynamoLoanRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-loans-repository";
 import { AWSEventBridgePublisher } from "../../infrastructure/aws-eventbridge/eventbridge-publisher";
 import { ApiResponse } from "../../infrastructure/http/ApiResponse";
@@ -14,8 +15,9 @@ export const handler = async (evt: APIGatewayProxyEvent) => {
         Logger.log("Registering loan");
 
         const loanRepository = await DynamoLoanRepository.create(dynamodbDocumentClient);
+        const inventoryRepository = await DynamoInventoryRepository.create(dynamodbDocumentClient);
         const publisher = await AWSEventBridgePublisher.create();
-        const registerLoanUsecase = new RegisterLoanUsecase(loanRepository, publisher);
+        const registerLoanUsecase = new RegisterLoanUsecase(loanRepository, inventoryRepository, publisher);
 
         const body = parseBody<RegisterLoanInput>(evt.body, RegisterLoanSchema);
         const result = await registerLoanUsecase.handle(body);

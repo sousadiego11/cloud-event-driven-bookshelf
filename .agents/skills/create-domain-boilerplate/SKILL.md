@@ -1,13 +1,23 @@
 ---
 name: create-domain-boilerplate
-description: Create or update domain and application boilerplate in this virtual bookshelf repository. Use when Codex needs to add a new domain aggregate/entity, define repository interfaces, DTO contracts, use cases, indexes, or application folders under src/domain and src/application while following this repo's conventions: DTOs live in application/repository or application/dtos folders, DTO properties are PascalCase, domain types live inside exported <Domain>Domain namespaces, and domain properties must not use underscore-prefixed names.
+description: Create or update domain, application, repository, DynamoDB persistence, DynamoDB table, and Lambda IAM table permission boilerplate in this virtual bookshelf repository. Use when Codex needs to add or normalize a domain aggregate/entity, DTO contract, repository interface, DynamoDB repository implementation, application use case, DynamoDB table or GSI, or the table ARN in terraform/aws_lambdas.tf. API Gateway and SQS skills must rely on this skill for new domain persistence instead of creating repositories or tables themselves.
 ---
 
 # Create Domain Boilerplate
 
-Use this skill when creating or normalizing a domain/application module in this repository.
+Use this skill when creating or normalizing a domain/application module and its persistence in this repository.
 
-Read `references/project-structure.md` before editing. It captures the current layout and naming rules.
+Read `references/project-structure.md` before editing. It captures the current layout, DynamoDB patterns, IAM policy pattern, and naming rules.
+
+## Responsibility Boundary
+
+- Own domain, application, persistence, DynamoDB table, and DynamoDB table IAM permission changes.
+- Create repository interfaces and DynamoDB repository implementations for new domain persistence.
+- Create or update tables and GSIs in `terraform/aws_dynamodb.tf`.
+- Add only the table ARN to the DynamoDB `resources` list in `terraform/aws_lambdas.tf`.
+- Do not add GSI/index ARNs to the Lambda IAM policy unless the project pattern changes.
+- Let `$create-apigateway-route` handle HTTP transport after the domain/use case/repository/table exist.
+- Let `$create-sqs-listener` handle queue/listener transport after the domain/use case/repository/table exist.
 
 ## Core Rules
 
@@ -15,6 +25,7 @@ Read `references/project-structure.md` before editing. It captures the current l
 - Keep application files in `src/application/<Domain>/`.
 - Put repository interfaces in `src/application/<Domain>/repositories/I<Domain>Repository.ts`.
 - Export repository interfaces from `src/application/<Domain>/repositories/index.ts`.
+- Put DynamoDB implementations in `src/infrastructure/aws-dynamodb-repositories/dynamodb-<domains>-repository.ts`.
 - Put DTO types with the application contract, not inside the domain folder.
 - Prefer declaring repository-facing DTOs in the repository interface file when the DTO only exists for persistence/repository use.
 - Use `src/application/<Domain>/dtos/*.ts` only when the DTO is a broader application/input/output contract reused beyond one repository.
@@ -24,8 +35,6 @@ Read `references/project-structure.md` before editing. It captures the current l
 - Keep domain state private.
 - Prefer ECMAScript private fields such as `#status` and `#updatedAt`.
 - If another class needs to read domain state, expose a focused `get` instead of making the property public.
-- Prefer simple domain property names such as `status` and `updatedAt`.
-- Avoid redundant names such as `currentStatus`, `statusValue`, or `updatedAtValue` unless there is a real conflict that cannot be modeled better.
 - Keep domain internals in idiomatic TypeScript camelCase; only DTOs use PascalCase.
 - Keep `toDto()` responsible for translating domain names to DTO names.
 
@@ -34,22 +43,27 @@ Read `references/project-structure.md` before editing. It captures the current l
 1. Inspect existing related files before creating new ones:
    - `src/domain/<Domain>/`
    - `src/application/<Domain>/`
-   - repository interfaces and `index.ts`
-   - nearby use cases and DTOs
+   - `src/infrastructure/aws-dynamodb-repositories/`
+   - `terraform/aws_dynamodb.tf`
+   - `terraform/aws_lambdas.tf`
 2. Decide whether the domain needs:
    - a domain class/entity
+   - an application DTO
    - a repository interface
-   - a DTO in `repositories/I<Domain>Repository.ts`
-   - a separate DTO file under `dtos/`
+   - a DynamoDB repository implementation
    - one or more use cases under `Usecase/`
+   - a table or GSI
 3. Create folders and files using the current capitalization:
    - domain folder and class: PascalCase
    - repository interface: `I<Domain>Repository`
    - use case class: PascalCase ending in `Usecase`
+   - Dynamo repository class: `Dynamo<Domain>Repository`
 4. Keep domain validation and state transitions inside the domain object.
 5. Keep orchestration inside use cases.
-6. Keep persistence details out of domain and use case files.
-7. Verify imports point from domain to application types only when needed for DTO translation; do not put DTO declarations in `src/domain`.
+6. Keep persistence details inside infrastructure repository files.
+7. Update `terraform/aws_dynamodb.tf` for the table and any GSIs.
+8. Update only the DynamoDB `resources` list in `terraform/aws_lambdas.tf` with `aws_dynamodb_table.<table>.arn`.
+9. Verify imports are type-only where possible.
 
 ## Domain Pattern
 
@@ -58,6 +72,11 @@ Use private constructors when creation requires validation or factory methods.
 Prefer:
 
 ```ts
+export namespace ExampleDomain {
+    export type Id = string;
+    export type Status = "created" | "done";
+}
+
 export class Example {
     readonly #id: ExampleDomain.Id;
     #status: ExampleDomain.Status;
@@ -79,16 +98,6 @@ export class Example {
 }
 ```
 
-Put domain type aliases above the class:
-
-```ts
-export namespace ExampleDomain {
-    export type Id = string;
-    export type UserId = string;
-    export type Status = "created" | "done";
-}
-```
-
 Avoid:
 
 ```ts
@@ -96,14 +105,13 @@ private _status: string;
 _updatedAt: Date;
 ```
 
-## Repository DTO Pattern
+## Repository Pattern
 
 For repository-local DTOs, place the DTO in `I<Domain>Repository.ts`:
 
 ```ts
 export interface ExampleDTO {
     Id: string;
-    UserId: string;
     CreatedAt: string;
     UpdatedAt: string;
 }
@@ -128,8 +136,9 @@ export type { IExampleRepository } from "./IExampleRepository";
 - Domain-local type aliases live in `export namespace <Domain>Domain`.
 - Domain properties do not start with `_`.
 - Domain state is private by default.
-- External reads use `get` only when truly needed.
 - `toDto()` maps camelCase domain properties into PascalCase DTO keys.
 - Repository folder has `I<Domain>Repository.ts` and `index.ts`.
+- DynamoDB repository implementation exists when the domain persists data.
+- `terraform/aws_dynamodb.tf` has the table and required GSIs.
+- `terraform/aws_lambdas.tf` includes the table ARN in the DynamoDB policy `resources` list.
 - Use cases return application DTOs, not domain entities, unless the existing module already does otherwise.
-- Imports are type-only where possible.
