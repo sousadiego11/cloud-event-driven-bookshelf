@@ -10,9 +10,7 @@ export const handler = async (event: SQSEvent) => {
             const { detail, detailType } = parseSqsRecord<BookDTO>(record, BookDTOSchema);
 
             Logger.log("Library notified about a new registered book", {
-                BookId: detail.Id,
-                Title: detail.Title,
-                Author: detail.Author,
+                Book: detail,
                 SourceEvent: detailType,
             });
         } catch (error) {
