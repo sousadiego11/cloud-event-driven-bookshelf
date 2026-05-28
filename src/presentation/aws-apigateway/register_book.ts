@@ -15,9 +15,8 @@ export const handler = async (evt: APIGatewayProxyEvent) => {
         Logger.log("Registering book");
 
         const bookRepository = await DynamoBookRepository.create(dynamodbDocumentClient);
-        const inventoryRepository = await DynamoInventoryRepository.create(dynamodbDocumentClient);
         const publisher = await AWSEventBridgePublisher.create();
-        const registerBookUsecase = new RegisterBookUsecase(bookRepository, inventoryRepository, publisher);
+        const registerBookUsecase = new RegisterBookUsecase(bookRepository, publisher);
 
         const body = parseBody<RegisterBookInput>(evt.body, RegisterBookSchema);
         const result = await registerBookUsecase.handle(body);

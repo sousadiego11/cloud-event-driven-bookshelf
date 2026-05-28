@@ -6,7 +6,6 @@ Content-Type: application/json
   "Title": "Clean Architecture",
   "Author": "Robert C. Martin",
   "Isbn": "9780134494166",
-  "Quantity": 3
 }
 
 ### Register Loan - POST /loans
