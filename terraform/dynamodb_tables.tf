@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "books" {
-  name         = "bookshelf-books"
+  name         = local.dynamodb.books.name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
 
@@ -24,7 +24,7 @@ resource "aws_dynamodb_table" "books" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_author_registered_idx"
+    name            = local.dynamodb.books.indexes.author_registered
     projection_type = "ALL"
 
     key_schema {
@@ -39,7 +39,7 @@ resource "aws_dynamodb_table" "books" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_isbn_idx"
+    name            = local.dynamodb.books.indexes.isbn
     projection_type = "ALL"
 
     key_schema {
@@ -55,7 +55,7 @@ resource "aws_dynamodb_table" "books" {
 }
 
 resource "aws_dynamodb_table" "loans" {
-  name         = "bookshelf-loans"
+  name         = local.dynamodb.loans.name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
 
@@ -80,7 +80,7 @@ resource "aws_dynamodb_table" "loans" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_cpf_registered_idx"
+    name            = local.dynamodb.loans.indexes.cpf_registered
     projection_type = "ALL"
 
     key_schema {
@@ -95,7 +95,7 @@ resource "aws_dynamodb_table" "loans" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_book_registered_idx"
+    name            = local.dynamodb.loans.indexes.book_registered
     projection_type = "ALL"
 
     key_schema {
@@ -116,7 +116,7 @@ resource "aws_dynamodb_table" "loans" {
 }
 
 resource "aws_dynamodb_table" "inventory" {
-  name         = "bookshelf-inventory"
+  name         = local.dynamodb.inventory.name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
 
@@ -131,7 +131,7 @@ resource "aws_dynamodb_table" "inventory" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_inventory_book_idx"
+    name            = local.dynamodb.inventory.indexes.book
     projection_type = "ALL"
 
     key_schema {
@@ -147,7 +147,7 @@ resource "aws_dynamodb_table" "inventory" {
 }
 
 resource "aws_dynamodb_table" "notifications" {
-  name         = "bookshelf-notifications"
+  name         = local.dynamodb.notifications.name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
 
@@ -162,7 +162,7 @@ resource "aws_dynamodb_table" "notifications" {
   }
 
   global_secondary_index {
-    name            = "bookshelf_notification_idempotency_key_idx"
+    name            = local.dynamodb.notifications.indexes.idempotency_key
     projection_type = "ALL"
 
     key_schema {
