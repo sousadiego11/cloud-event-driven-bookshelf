@@ -1,6 +1,6 @@
 ---
 name: create-domain-boilerplate
-description: Create or update domain, application, repository, DynamoDB persistence, DynamoDB table, and Lambda IAM table permission boilerplate in this virtual bookshelf repository. Use when Codex needs to add or normalize a domain aggregate/entity, DTO contract, repository interface, DynamoDB repository implementation, application use case, DynamoDB table or GSI, or the table ARN in terraform/aws_lambdas.tf. API Gateway and SQS skills must rely on this skill for new domain persistence instead of creating repositories or tables themselves.
+description: Create or update domain, application, repository, DynamoDB persistence, DynamoDB table, and Lambda IAM table permission boilerplate in this virtual bookshelf repository. Use when Codex needs to add or normalize a domain aggregate/entity, DTO contract, repository interface, DynamoDB repository implementation, application use case, DynamoDB table or GSI, or the table and index ARNs in terraform/aws_lambdas.tf. API Gateway and SQS skills must rely on this skill for new domain persistence instead of creating repositories or tables themselves.
 ---
 
 # Create Domain Boilerplate
@@ -14,8 +14,8 @@ Read `references/project-structure.md` before editing. It captures the current l
 - Own domain, application, persistence, DynamoDB table, and DynamoDB table IAM permission changes.
 - Create repository interfaces and DynamoDB repository implementations for new domain persistence.
 - Create or update tables and GSIs in `terraform/aws_dynamodb.tf`.
-- Add only the table ARN to the DynamoDB `resources` list in `terraform/aws_lambdas.tf`.
-- Do not add GSI/index ARNs to the Lambda IAM policy unless the project pattern changes.
+- Add the table ARN and any required GSI index ARNs to the DynamoDB `resources` list in `terraform/aws_lambdas.tf`.
+- Keep the ARN pattern aligned with Terraform, including `${aws_dynamodb_table.<table>.arn}/index/*` for index access.
 - Let `$create-apigateway-route` handle HTTP transport after the domain/use case/repository/table exist.
 - Let `$create-sqs-listener` handle queue/listener transport after the domain/use case/repository/table exist.
 
@@ -62,7 +62,7 @@ Read `references/project-structure.md` before editing. It captures the current l
 5. Keep orchestration inside use cases.
 6. Keep persistence details inside infrastructure repository files.
 7. Update `terraform/aws_dynamodb.tf` for the table and any GSIs.
-8. Update only the DynamoDB `resources` list in `terraform/aws_lambdas.tf` with `aws_dynamodb_table.<table>.arn`.
+8. Update the DynamoDB `resources` list in `terraform/aws_lambdas.tf` with the table ARN and any required `${aws_dynamodb_table.<table>.arn}/index/*` entries for GSIs.
 9. Verify imports are type-only where possible.
 
 ## Domain Pattern
@@ -140,5 +140,5 @@ export type { IExampleRepository } from "./IExampleRepository";
 - Repository folder has `I<Domain>Repository.ts` and `index.ts`.
 - DynamoDB repository implementation exists when the domain persists data.
 - `terraform/aws_dynamodb.tf` has the table and required GSIs.
-- `terraform/aws_lambdas.tf` includes the table ARN in the DynamoDB policy `resources` list.
+- `terraform/aws_lambdas.tf` includes the table ARN and required index ARNs in the DynamoDB policy `resources` list.
 - Use cases return application DTOs, not domain entities, unless the existing module already does otherwise.

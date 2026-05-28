@@ -32,8 +32,13 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
 
     resources = [
       aws_dynamodb_table.books.arn,
+      "${aws_dynamodb_table.books.arn}/index/*",
+
       aws_dynamodb_table.loans.arn,
-      aws_dynamodb_table.inventory.arn
+      "${aws_dynamodb_table.loans.arn}/index/*",
+
+      aws_dynamodb_table.inventory.arn,
+      "${aws_dynamodb_table.inventory.arn}/index/*"
     ]
   }
 

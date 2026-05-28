@@ -126,13 +126,16 @@
   - `bookshelf-books`
   - `bookshelf-loans`
   - `bookshelf-inventory`
-- In `terraform/aws_lambdas.tf`, the shared DynamoDB policy should list only table ARNs in `resources`, for example:
+- In `terraform/aws_lambdas.tf`, the shared DynamoDB policy should list table ARNs and, when a table exposes GSIs, the matching `index/*` ARNs in `resources`, for example:
 
 ```hcl
 resources = [
   aws_dynamodb_table.books.arn,
+  "${aws_dynamodb_table.books.arn}/index/*",
   aws_dynamodb_table.loans.arn,
-  aws_dynamodb_table.inventory.arn
+  "${aws_dynamodb_table.loans.arn}/index/*",
+  aws_dynamodb_table.inventory.arn,
+  "${aws_dynamodb_table.inventory.arn}/index/*"
 ]
 ```
 

@@ -42,14 +42,17 @@ Use this reference before creating or normalizing a domain module.
 
 `terraform/aws_lambdas.tf` centralizes the shared Lambda IAM policy.
 
-When adding a persisted domain table, add only the table ARN to the DynamoDB statement `resources` list:
+When adding a persisted domain table with GSIs, add the table ARN and the matching index ARNs to the DynamoDB statement `resources` list:
 
 ```hcl
 resources = [
   aws_dynamodb_table.books.arn,
+  "${aws_dynamodb_table.books.arn}/index/*",
   aws_dynamodb_table.loans.arn,
-  aws_dynamodb_table.inventory.arn
+  "${aws_dynamodb_table.loans.arn}/index/*",
+  aws_dynamodb_table.inventory.arn,
+  "${aws_dynamodb_table.inventory.arn}/index/*"
 ]
 ```
 
-Do not add GSI/index ARNs to this list under the current project convention.
+Keep the ARN pattern aligned with Terraform and include index ARNs only for tables that expose GSIs.
