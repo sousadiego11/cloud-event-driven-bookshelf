@@ -13,9 +13,8 @@ export class Id {
         return new Id(uuid);
     }
 
-    static hash(obj: Record<string, any>): Id {
-        const hashHex = hash.sha1(obj);
-        return new Id(hashHex);
+    static hash(obj: Record<string, any>): string {
+        return hash.sha1(obj);
     }
 
     static create(value: string): Id {

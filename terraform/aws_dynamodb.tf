@@ -145,3 +145,34 @@ resource "aws_dynamodb_table" "inventory" {
     Environment = "Production"
   }
 }
+
+resource "aws_dynamodb_table" "notifications" {
+  name         = "bookshelf-notifications"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "Id"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+
+  attribute {
+    name = "IdempotencyKey"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "bookshelf_notification_idempotency_key_idx"
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "IdempotencyKey"
+      key_type       = "HASH"
+    }
+  }
+
+  tags = {
+    Name        = "Bookshelf Notifications Table"
+    Environment = "Production"
+  }
+}

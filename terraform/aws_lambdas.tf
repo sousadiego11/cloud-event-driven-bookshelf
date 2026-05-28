@@ -38,7 +38,10 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "${aws_dynamodb_table.loans.arn}/index/*",
 
       aws_dynamodb_table.inventory.arn,
-      "${aws_dynamodb_table.inventory.arn}/index/*"
+      "${aws_dynamodb_table.inventory.arn}/index/*",
+
+      aws_dynamodb_table.notifications.arn,
+      "${aws_dynamodb_table.notifications.arn}/index/*"
     ]
   }
 
@@ -65,7 +68,8 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
     ]
 
     resources = [
-      aws_sqs_queue.notify_library_book_registered.arn
+      aws_sqs_queue.notify_library_book_registered.arn,
+      aws_sqs_queue.initialize_inventory_book_registered.arn
     ]
   }
 }
@@ -155,6 +159,26 @@ resource "aws_lambda_function" "notify_library_book_registered" {
   }
 }
 
+resource "aws_lambda_function" "initialize_inventory_book_registered" {
+  function_name = "bookshelf-initialize-inventory-book-registered"
+
+  filename         = data.archive_file.app.output_path
+  source_code_hash = data.archive_file.app.output_base64sha256
+
+  handler = "aws-sqs/initialize_inventory_book_registered.handler"
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "InitializeInventoryBookRegisteredFunction"
+  }
+}
+
 resource "aws_lambda_event_source_mapping" "notify_library_book_registered_mapping" {
   event_source_arn = aws_sqs_queue.notify_library_book_registered.arn
   function_name    = aws_lambda_function.notify_library_book_registered.arn
@@ -165,5 +189,18 @@ resource "aws_lambda_event_source_mapping" "notify_library_book_registered_mappi
 
   tags = {
     Name = "NotifyLibraryBookRegisteredMapping"
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "initialize_inventory_book_registered_mapping" {
+  event_source_arn = aws_sqs_queue.initialize_inventory_book_registered.arn
+  function_name    = aws_lambda_function.initialize_inventory_book_registered.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "InitializeInventoryBookRegisteredMapping"
   }
 }
