@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create API Domain Boilerplate"
+  short_description: "Criar Estrutura padrão de Domínio"
+  default_prompt: "Use $create-domain-boilerplate to add a new domain in this repository."
