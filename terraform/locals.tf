@@ -75,4 +75,10 @@ locals {
       loans = "loans"
     }
   }
+
+  s3 = {
+    buckets = {
+      lambdas = "bookshelf-lambda-artifacts"
+    }
+  }
 }

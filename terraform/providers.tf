@@ -11,5 +11,14 @@ terraform {
     }
   }
 
+  cloud {
+
+    organization = "bookshelf-api"
+
+    workspaces {
+      name = "api"
+    }
+  }
+
   required_version = ">= 1.14"
 }

@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "register_book" {
   function_name = local.lambdas.register_book.function_name
 
-  filename         = data.archive_file.app.output_path
-  source_code_hash = data.archive_file.app.output_base64sha256
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
 
   handler = local.lambdas.register_book.handler
   runtime = "nodejs20.x"
@@ -21,8 +21,8 @@ resource "aws_lambda_function" "register_book" {
 resource "aws_lambda_function" "register_loan" {
   function_name = local.lambdas.register_loan.function_name
 
-  filename         = data.archive_file.app.output_path
-  source_code_hash = data.archive_file.app.output_base64sha256
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
 
   handler = local.lambdas.register_loan.handler
   runtime = "nodejs20.x"
@@ -41,8 +41,8 @@ resource "aws_lambda_function" "register_loan" {
 resource "aws_lambda_function" "notify_library_book_registered" {
   function_name = local.lambdas.notify_library_book_registered.function_name
 
-  filename         = data.archive_file.app.output_path
-  source_code_hash = data.archive_file.app.output_base64sha256
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
 
   handler = local.lambdas.notify_library_book_registered.handler
   runtime = "nodejs20.x"
@@ -61,8 +61,8 @@ resource "aws_lambda_function" "notify_library_book_registered" {
 resource "aws_lambda_function" "initialize_inventory_book_registered" {
   function_name = local.lambdas.initialize_inventory_book_registered.function_name
 
-  filename         = data.archive_file.app.output_path
-  source_code_hash = data.archive_file.app.output_base64sha256
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
 
   handler = local.lambdas.initialize_inventory_book_registered.handler
   runtime = "nodejs20.x"
