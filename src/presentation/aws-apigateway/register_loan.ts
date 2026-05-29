@@ -15,8 +15,9 @@ export const handler = async (evt: APIGatewayProxyEvent) => {
         Logger.log("Registering loan");
 
         const loanRepository = await DynamoLoanRepository.create(dynamodbDocumentClient);
+        const inventoryRepository = await DynamoInventoryRepository.create(dynamodbDocumentClient);
         const publisher = await AWSEventBridgePublisher.create();
-        const registerLoanUsecase = new RegisterLoanUsecase(loanRepository, publisher);
+        const registerLoanUsecase = new RegisterLoanUsecase(loanRepository, inventoryRepository, publisher);
 
         const body = parseBody<RegisterLoanInput>(evt.body, RegisterLoanSchema);
         const result = await registerLoanUsecase.handle(body);
