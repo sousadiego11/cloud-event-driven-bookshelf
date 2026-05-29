@@ -51,6 +51,7 @@ locals {
       indexes = {
         cpf_registered  = "bookshelf_cpf_registered_idx"
         book_registered = "bookshelf_book_registered_idx"
+        book_by_cpf     = "bookshelf_book_by_cpf_idx"
       }
     }
     inventory = {

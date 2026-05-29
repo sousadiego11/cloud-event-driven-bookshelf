@@ -21,7 +21,7 @@ export class RegisterBookUsecase implements Usecase<RegisterBookInput, RegisterB
     async handle(input: RegisterBookInput): Promise<RegisterBookOutput> {
         const registeredBook = await this.bookRepository.findByIsbn(input.Isbn.trim());
         if (registeredBook) {
-            throw new DomainError("Book with this Isbn already exists");
+            throw new DomainError(`Book with Isbn ${input.Isbn.trim()} already exists`);
         }
 
         const book = Book.register(input.Title, input.Author, input.Isbn);

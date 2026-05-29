@@ -1,7 +1,8 @@
 import {
   DeleteCommand,
   DynamoDBDocumentClient,
-  PutCommand
+  PutCommand,
+  QueryCommand
 } from "@aws-sdk/lib-dynamodb";
 
 import type { LoanDTO } from "../../application/Loan/dtos/LoanDto";
@@ -30,5 +31,20 @@ export class DynamoLoanRepository implements ILoanRepository {
       TableName: this.TABLE_NAME,
       Key: { Id: id }
     }));
+  }
+
+  async findByBookForCpf(bookId: string, cpf: string): Promise<LoanDTO | null> {
+    const result = await this.docClient.send(new QueryCommand({
+      TableName: this.TABLE_NAME,
+      IndexName: "bookshelf_book_by_cpf_idx",
+      KeyConditionExpression: "Cpf = :cpf AND BookId = :bookId",
+      ExpressionAttributeValues: {
+        ":cpf": cpf,
+        ":bookId": bookId
+      },
+      Limit: 1
+    }));
+
+    return result.Items?.[0] as LoanDTO | undefined ?? null;
   }
 }

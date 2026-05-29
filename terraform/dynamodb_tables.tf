@@ -109,6 +109,21 @@ resource "aws_dynamodb_table" "loans" {
     }
   }
 
+  global_secondary_index {
+    name            = local.dynamodb.loans.indexes.book_by_cpf
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "Cpf"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "BookId"
+      key_type       = "RANGE"
+    }
+  }
+
   tags = {
     Name        = "Bookshelf Loans Table"
     Environment = "Production"

@@ -18,6 +18,11 @@ export class RegisterLoanUsecase implements Usecase<RegisterLoanInput, LoanDTO> 
     ) { }
 
     async handle(input: RegisterLoanInput): Promise<LoanDTO> {
+        const existingLoan = await this.loanRepository.findByBookForCpf(input.BookId, input.Cpf)
+        if (existingLoan) {
+            throw new DomainError(`Cpf ${input.Cpf} already has a loan for book ${input.BookId}`);
+        }
+
         const existingInventory = await this.inventoryRepository.findByBookId(input.BookId);
         if (!existingInventory) {
             throw new DomainError(`There is no inventory for Book ${input.BookId}`);
