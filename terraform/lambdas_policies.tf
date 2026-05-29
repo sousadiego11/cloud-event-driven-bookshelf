@@ -55,7 +55,8 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
 
     resources = [
       aws_sqs_queue.notify_library_book_registered.arn,
-      aws_sqs_queue.initialize_inventory_book_registered.arn
+      aws_sqs_queue.initialize_inventory_book_registered.arn,
+      aws_sqs_queue.notify_library_loan_registered.arn
     ]
   }
 }
