@@ -1,7 +1,6 @@
 import type { SQSEvent } from "aws-lambda";
 import type { BookDTO } from "../../application/Book/dtos/BookDto";
 import { NotifyLibraryBookRegisteredUsecase } from "../../application/Notification/Usecase/NotifyLibraryBookRegisteredUsecase";
-import { DomainError } from "../../domain/Error/errors";
 import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
 import { DynamoNotificationRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-notifications-repository";
 import { Logger } from "../../shared/logger";
@@ -22,13 +21,6 @@ export const handler = async (event: SQSEvent) => {
                 SourceEvent: detailType,
             });
         } catch (error) {
-            if (error instanceof DomainError && error.message.includes("already registered")) {
-                Logger.log("Notification already registered", {
-                    Error: error.message,
-                });
-                continue;
-            }
-
             Logger.error("Error processing SQS message", error);
             throw error;
         }
