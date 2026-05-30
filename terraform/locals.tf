@@ -49,9 +49,11 @@ locals {
     loans = {
       name = "bookshelf-loans"
       indexes = {
-        cpf_registered  = "bookshelf_cpf_registered_idx"
-        book_registered = "bookshelf_book_registered_idx"
-        book_by_cpf     = "bookshelf_book_by_cpf_idx"
+        cpf_registered      = "bookshelf_cpf_registered_idx"
+        book_registered     = "bookshelf_book_registered_idx"
+        book_by_cpf         = "bookshelf_book_by_cpf_idx"
+        due_date_registered = "bookshelf_due_date_registered_idx"
+        returned_at         = "bookshelf_returned_at_idx"
       }
     }
     inventory = {

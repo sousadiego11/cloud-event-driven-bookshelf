@@ -79,6 +79,16 @@ resource "aws_dynamodb_table" "loans" {
     type = "S"
   }
 
+  attribute {
+    name = "ReturnedAt"
+    type = "S"
+  }
+
+  attribute {
+    name = "DueDate"
+    type = "S"
+  }
+
   global_secondary_index {
     name            = local.dynamodb.loans.indexes.cpf_registered
     projection_type = "ALL"
@@ -121,6 +131,31 @@ resource "aws_dynamodb_table" "loans" {
     key_schema {
       attribute_name = "BookId"
       key_type       = "RANGE"
+    }
+  }
+
+  global_secondary_index {
+    name            = local.dynamodb.loans.indexes.due_date_registered
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "DueDate"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "RegisteredAt"
+      key_type       = "RANGE"
+    }
+  }
+
+  global_secondary_index {
+    name            = local.dynamodb.loans.indexes.returned_at
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "ReturnedAt"
+      key_type       = "HASH"
     }
   }
 

@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "dynamodb:DeleteItem",
       "dynamodb:GetItem",
       "dynamodb:Query",
+      "dynamodb:UpdateItem",
     ]
 
     resources = [

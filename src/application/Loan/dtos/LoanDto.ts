@@ -4,4 +4,6 @@ export interface LoanDTO {
     Cpf: string;
     RegisteredAt: string;
     UpdatedAt: string;
+    ReturnedAt?: string;
+    DueDate: string
 }
