@@ -5,7 +5,8 @@ import type { BookDTO } from "../../application/Book/dtos/BookDto";
 export const RegisterBookSchema = z.object({
     Title: z.string().min(1),
     Author: z.string().min(1),
-    Isbn: z.string().min(1)
+    Isbn: z.string().min(1),
+    Stock: z.number().int().nonnegative().optional().default(0),
 }) satisfies z.ZodType<RegisterBookInput>;
 
 export const BookDTOSchema: z.ZodType<BookDTO> = z.object({

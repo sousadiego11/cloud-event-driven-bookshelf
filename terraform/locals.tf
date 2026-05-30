@@ -6,9 +6,6 @@ locals {
     notify_library_loan_registered = {
       name = "bookshelf-notify-library-loan-registered"
     }
-    initialize_inventory_book_registered = {
-      name = "bookshelf-initialize-inventory-book-registered"
-    }
   }
 
   lambdas = {
@@ -27,10 +24,6 @@ locals {
     notify_library_loan_registered = {
       function_name = "bookshelf-notify-library-loan-registered"
       handler       = "aws-sqs/notify_library_loan_registered.handler"
-    }
-    initialize_inventory_book_registered = {
-      function_name = "bookshelf-initialize-inventory-book-registered"
-      handler       = "aws-sqs/initialize_inventory_book_registered.handler"
     }
   }
 
