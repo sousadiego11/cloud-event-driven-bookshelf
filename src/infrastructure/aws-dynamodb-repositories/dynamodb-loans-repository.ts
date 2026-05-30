@@ -47,4 +47,22 @@ export class DynamoLoanRepository implements ILoanRepository {
 
     return result.Items?.[0] as LoanDTO | undefined ?? null;
   }
+
+  async findByBookIdInPeriod(bookId: string, days: number): Promise<LoanDTO[]> {
+    const now = new Date();
+    const pastDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+    const pastDateIso = pastDate.toISOString();
+
+    const result = await this.docClient.send(new QueryCommand({
+      TableName: this.TABLE_NAME,
+      IndexName: "bookshelf_book_registered_idx",
+      KeyConditionExpression: "BookId = :bookId AND RegisteredAt >= :pastDate",
+      ExpressionAttributeValues: {
+        ":bookId": bookId,
+        ":pastDate": pastDateIso
+      }
+    }));
+
+    return (result.Items as LoanDTO[]) || [];
+  }
 }

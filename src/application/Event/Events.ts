@@ -15,6 +15,7 @@ export namespace Events {
     export enum Queues {
         NotifyLibraryBookRegistered = "bookshelf-notify-library-book-registered",
         NotifyLibraryLoanRegistered = "bookshelf-notify-library-loan-registered",
+        AnalyzeDemandLoanRegistered = "bookshelf-analyze-demand-loan-registered",
     }
 
     export interface Mappings {

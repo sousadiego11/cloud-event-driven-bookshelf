@@ -77,3 +77,23 @@ resource "aws_lambda_function" "notify_library_loan_registered" {
     Name = "NotifyLibraryLoanRegisteredFunction"
   }
 }
+
+resource "aws_lambda_function" "analyze_demand_loan_registered" {
+  function_name = local.lambdas.analyze_demand_loan_registered.function_name
+
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
+
+  handler = local.lambdas.analyze_demand_loan_registered.handler
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "AnalyzeDemandLoanRegisteredFunction"
+  }
+}

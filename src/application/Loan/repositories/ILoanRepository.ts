@@ -6,4 +6,6 @@ export interface ILoanRepository {
     delete(id: string): Promise<void>;
 
     findByBookForCpf(bookId: string, cpf: string): Promise<LoanDTO | null>
+
+    findByBookIdInPeriod(bookId: string, days: number): Promise<LoanDTO[]>;
 }

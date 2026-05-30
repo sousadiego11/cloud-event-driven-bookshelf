@@ -6,6 +6,9 @@ locals {
     notify_library_loan_registered = {
       name = "bookshelf-notify-library-loan-registered"
     }
+    analyze_demand_loan_registered = {
+      name = "bookshelf-analyze-demand-loan-registered"
+    }
   }
 
   lambdas = {
@@ -24,6 +27,10 @@ locals {
     notify_library_loan_registered = {
       function_name = "bookshelf-notify-library-loan-registered"
       handler       = "aws-sqs/notify_library_loan_registered.handler"
+    }
+    analyze_demand_loan_registered = {
+      function_name = "bookshelf-analyze-demand-loan-registered"
+      handler       = "aws-sqs/analyze_demand_loan_registered.handler"
     }
   }
 
