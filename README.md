@@ -187,20 +187,6 @@ Content-Type: application/json
 
 ---
 
-## 🔍 Key Files
-
-- [`src/application/Event/Events.ts`](src/application/Event/Events.ts)
-- [`src/application/Loan/Usecase/RegisterLoanUsecase.ts`](src/application/Loan/Usecase/RegisterLoanUsecase.ts)
-- [`src/application/Loan/Usecase/ReturnLoanUsecase.ts`](src/application/Loan/Usecase/ReturnLoanUsecase.ts)
-- [`src/presentation/aws-apigateway/register_book.ts`](src/presentation/aws-apigateway/register_book.ts)
-- [`src/presentation/aws-apigateway/register_loan.ts`](src/presentation/aws-apigateway/register_loan.ts)
-- [`src/presentation/aws-apigateway/return_loan.ts`](src/presentation/aws-apigateway/return_loan.ts)
-- [`src/presentation/aws-sqs/notify_library_book_registered.ts`](src/presentation/aws-sqs/notify_library_book_registered.ts)
-- [`src/presentation/aws-sqs/notify_library_loan_registered.ts`](src/presentation/aws-sqs/notify_library_loan_registered.ts)
-- [`src/presentation/aws-sqs/notify_library_loan_returned.ts`](src/presentation/aws-sqs/notify_library_loan_returned.ts)
-
----
-
 ## 📌 Notes
 
 - Project name in code: `cloud-event-driven-bookshelf`
