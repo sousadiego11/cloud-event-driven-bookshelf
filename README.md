@@ -10,7 +10,6 @@
 <img src="https://icon.icepanel.io/AWS/svg/App-Integration/EventBridge.svg" width="50" alt="AWS EventBridge"/>
 <img src="https://icon.icepanel.io/AWS/svg/App-Integration/Simple-Queue-Service.svg" width="50" alt="AWS SQS"/>
 <img src="https://icon.icepanel.io/AWS/svg/Database/DynamoDB.svg" width="50" alt="AWS DynamoDB"/>
-<img src="https://icon.icepanel.io/AWS/svg/Storage/Simple-Storage-Service.svg" width="50" alt="AWS Lambda"/>
 <img src="https://icon.icepanel.io/AWS/svg/Security-Identity-Compliance/Identity-and-Access-Management.svg" width="50" alt="AWS IAM"/>
 </div>
 
