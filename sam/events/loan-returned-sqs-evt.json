@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "messageId": "local-loan-returned-message",
+      "receiptHandle": "local",
+      "body": "{\"version\":\"0\",\"id\":\"local-event\",\"detail-type\":\"LoanReturned\",\"source\":\"bookshelf.loans\",\"account\":\"000000000000\",\"time\":\"2026-05-21T00:00:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"Id\":\"0d9f7d8e-1d7f-4e67-8d30-0d1f5e4b8a11\",\"BookId\":\"f5b0da38-59b8-4c1a-b90d-f2be36797620\",\"Cpf\":\"05079313943\",\"RegisteredAt\":\"2026-05-21T00:00:00.000Z\",\"UpdatedAt\":\"2026-05-21T00:00:00.000Z\",\"ReturnedAt\":\"2026-05-25T00:00:00.000Z\",\"DueDate\":\"2026-06-21T00:00:00.000Z\"}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "0",
+        "SenderId": "local",
+        "ApproximateFirstReceiveTimestamp": "0"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "local",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:000000000000:bookshelf-notify-library-loan-returned",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

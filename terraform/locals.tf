@@ -6,6 +6,9 @@ locals {
     notify_library_loan_registered = {
       name = "bookshelf-notify-library-loan-registered"
     }
+    notify_library_loan_returned = {
+      name = "bookshelf-notify-library-loan-returned"
+    }
     analyze_demand_loan_registered = {
       name = "bookshelf-analyze-demand-loan-registered"
     }
@@ -20,6 +23,10 @@ locals {
       function_name = "bookshelf-register-loan"
       handler       = "aws-apigateway/register_loan.handler"
     }
+    return_loan = {
+      function_name = "bookshelf-return-loan"
+      handler       = "aws-apigateway/return_loan.handler"
+    }
     notify_library_book_registered = {
       function_name = "bookshelf-notify-library-book-registered"
       handler       = "aws-sqs/notify_library_book_registered.handler"
@@ -27,6 +34,10 @@ locals {
     notify_library_loan_registered = {
       function_name = "bookshelf-notify-library-loan-registered"
       handler       = "aws-sqs/notify_library_loan_registered.handler"
+    }
+    notify_library_loan_returned = {
+      function_name = "bookshelf-notify-library-loan-returned"
+      handler       = "aws-sqs/notify_library_loan_returned.handler"
     }
     analyze_demand_loan_registered = {
       function_name = "bookshelf-analyze-demand-loan-registered"
@@ -42,6 +53,7 @@ locals {
     names = {
       book_registered = "BookRegistered"
       loan_registered = "LoanRegistered"
+      loan_returned = "LoanReturned"
     }
   }
 
@@ -83,6 +95,7 @@ locals {
     paths = {
       books = "books"
       loans = "loans"
+      return_loan = "return"
     }
   }
 

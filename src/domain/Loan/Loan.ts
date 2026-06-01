@@ -15,9 +15,9 @@ export class Loan {
     readonly #bookId: LoanDomain.BookId;
     readonly #cpf: Cpf;
     readonly #registeredAt: Date;
-    readonly #returnedAt?: Date;
+    #returnedAt?: Date;
     readonly #dueDate: Date;
-    readonly #updatedAt: Date;
+    #updatedAt: Date;
 
     private constructor(
         id: LoanDomain.Id,
@@ -25,7 +25,8 @@ export class Loan {
         cpf: Cpf,
         registeredAt: Date,
         returnedAt: Date | undefined,
-        dueDate: Date
+        dueDate: Date,
+        updatedAt: Date
     ) {
         this.#id = id;
         this.#bookId = bookId;
@@ -33,7 +34,7 @@ export class Loan {
         this.#registeredAt = registeredAt;
         this.#returnedAt = returnedAt;
         this.#dueDate = dueDate;
-        this.#updatedAt = registeredAt;
+        this.#updatedAt = updatedAt;
     }
 
     static register(bookId: LoanDomain.BookId, cpf: LoanDomain.Cpf): Loan {
@@ -46,7 +47,30 @@ export class Loan {
         }
 
         const id = Id.generate();
-        return new Loan(id.getValue(), normalizedBookId, loanCpf, new Date(), undefined, dueDate.value);
+        const registeredAt = new Date();
+
+        return new Loan(id.getValue(), normalizedBookId, loanCpf, registeredAt, undefined, dueDate.value, registeredAt);
+    }
+
+    static fromDto(loanDto: LoanDTO): Loan {
+        return new Loan(
+            loanDto.Id,
+            loanDto.BookId,
+            Cpf.create(loanDto.Cpf),
+            new Date(loanDto.RegisteredAt),
+            loanDto.ReturnedAt ? new Date(loanDto.ReturnedAt) : undefined,
+            new Date(loanDto.DueDate),
+            new Date(loanDto.UpdatedAt)
+        );
+    }
+
+    returnNow(): void {
+        if (this.#returnedAt) {
+            throw new DomainError("Loan already returned");
+        }
+
+        this.#returnedAt = new Date();
+        this.#updatedAt = new Date();
     }
 
     toDto(): LoanDTO {

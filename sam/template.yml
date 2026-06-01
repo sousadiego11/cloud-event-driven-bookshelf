@@ -42,9 +42,53 @@ Resources:
             Path: /loans
             Method: post
 
+  ReturnLoanFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/return_loan.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        ReturnLoan:
+          Type: Api
+          Properties:
+            Path: /loans/return
+            Method: post
+
   BookRegisteredNotifyLibraryFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
       Handler: aws-sqs/notify_library_book_registered.handler
       Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+
+  NotifyLibraryLoanRegisteredFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-sqs/notify_library_loan_registered.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+
+  NotifyLibraryLoanReturnedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-sqs/notify_library_loan_returned.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+
+  AnalyzeDemandLoanRegisteredFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-sqs/analyze_demand_loan_registered.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64

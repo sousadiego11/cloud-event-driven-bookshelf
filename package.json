@@ -7,7 +7,10 @@
   "scripts": {
     "build:lambdas": "rm -rf ./dist && bun build ./src/presentation/aws-apigateway/*.ts ./src/presentation/aws-sqs/*.ts --outdir ./dist --root ./src/presentation --target=node --format=cjs",
     "start:gateway": "bun run build:lambdas && cd ./sam && sam local start-api --template template.yml",
-    "invoke:notify": "bun run build:lambdas && cd ./sam && sam local invoke BookRegisteredNotifyLibraryFunction -e ./events/book-registered-sqs-evt.json "
+    "invoke:sqs:book-registered": "bun run build:lambdas && cd ./sam && sam local invoke BookRegisteredNotifyLibraryFunction -e ./events/book-registered-sqs-evt.json",
+    "invoke:sqs:loan-registered": "bun run build:lambdas && cd ./sam && sam local invoke NotifyLibraryLoanRegisteredFunction -e ./events/loan-registered-sqs-evt.json",
+    "invoke:sqs:loan-returned": "bun run build:lambdas && cd ./sam && sam local invoke NotifyLibraryLoanReturnedFunction -e ./events/loan-returned-sqs-evt.json",
+    "invoke:sqs:analyze-demand": "bun run build:lambdas && cd ./sam && sam local invoke AnalyzeDemandLoanRegisteredFunction -e ./events/loan-registered-sqs-evt.json"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.161",

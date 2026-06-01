@@ -11,3 +11,10 @@ resource "aws_api_gateway_method" "post_loans" {
   http_method   = "POST"
   authorization = "NONE"
 }
+
+resource "aws_api_gateway_method" "post_return_loan" {
+  rest_api_id   = aws_api_gateway_rest_api.books_api.id
+  resource_id   = aws_api_gateway_resource.return_loan.id
+  http_method   = "POST"
+  authorization = "NONE"
+}

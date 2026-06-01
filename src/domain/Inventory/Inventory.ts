@@ -73,6 +73,15 @@ export class Inventory {
         this.#updatedAt = new Date();
     }
 
+    returnOne(): void {
+        if (this.#available >= this.#copies) {
+            throw new DomainError("Book inventory is already full");
+        }
+
+        this.#available += 1;
+        this.#updatedAt = new Date();
+    }
+
     getCopies(): InventoryDomain.Copies {
         return this.#copies;
     }

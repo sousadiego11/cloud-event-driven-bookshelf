@@ -5,11 +5,21 @@ Content-Type: application/json
 {
   "Title": "Clean Architecture",
   "Author": "Robert C. Martin",
-  "Isbn": "9780134494166"
+  "Isbn": "9780134494166",
+  "Stock": 3
 }
 
 ### Register Loan - POST /loans
 POST http://127.0.0.1:3000/loans
+Content-Type: application/json
+
+{
+  "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
+  "Cpf": "05079313943"
+}
+
+### Return Loan - POST /loans/return
+POST http://127.0.0.1:3000/loans/return
 Content-Type: application/json
 
 {
