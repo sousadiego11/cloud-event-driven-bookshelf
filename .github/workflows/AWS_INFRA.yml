@@ -81,6 +81,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Install dependencies
+        run: bun install
+
       - name: Build Lambdas
         run: bun run build:lambdas
 

@@ -16,7 +16,7 @@
 
 ---
 
-Backend for a portfolio-ready virtual bookshelf built around an **event-driven serverless architecture**.
+Cloud-native virtual bookshelf backend featuring **event-driven serverless architecture**, fully automated **CI/CD pipelines**, **infrastructure as code**, and scalable AWS-native services.
 
 The system exposes a small but complete library workflow:
 
@@ -40,6 +40,7 @@ This project is designed to show:
 - Type-safe backend development with TypeScript
 - Infrastructure as Code with Terraform
 - Local testing with AWS SAM
+- CI/CD pipeline with Terraform and Lambda deploy matrix
 
 ---
 
@@ -72,6 +73,37 @@ This project is designed to show:
 
 ### Queues
 
+- `bookshelf-notify-library-book-registered`
+- `bookshelf-notify-library-loan-registered`
+- `bookshelf-notify-library-loan-returned`
+- `bookshelf-analyze-demand-loan-registered`
+
+---
+
+## 🔁 CI/CD
+
+The repository uses `.github/workflows/AWS_INFRA.yml` as main delivery pipeline.
+
+### Terraform job
+
+- Runs on `push` to `main`
+- Uses `hashicorp/setup-terraform`
+- Authenticates with HCP Terraform
+- Runs `terraform init`, `terraform plan`, and `terraform apply`
+
+### Lambda deploy job
+
+- Runs after Terraform succeeds
+- Uses `strategy.matrix` to deploy each Lambda separately
+- Builds source with `bun run build:lambdas`
+- Configures AWS credentials with GitHub secrets and `aws-actions/configure-aws-credentials@v4`
+- Deploys Lambdas with `aws-actions/aws-lambda-deploy@v1.1.0`
+
+### Matrix functions
+
+- `bookshelf-register-book`
+- `bookshelf-register-loan`
+- `bookshelf-return-loan`
 - `bookshelf-notify-library-book-registered`
 - `bookshelf-notify-library-loan-registered`
 - `bookshelf-notify-library-loan-returned`
