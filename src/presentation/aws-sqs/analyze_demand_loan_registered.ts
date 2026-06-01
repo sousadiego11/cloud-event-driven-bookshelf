@@ -1,6 +1,7 @@
 import type { SQSEvent } from "aws-lambda";
 import type { LoanDTO } from "../../application/Loan/dtos/LoanDto";
 import { AnalyzeBookDemandUsecase } from "../../application/Loan/Usecase/AnalyzeBookDemandUsecase";
+import { NotificationService } from "../../application/Notification/services";
 import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
 import { DynamoNotificationRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-notifications-repository";
 import { DynamoLoanRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-loans-repository";
@@ -14,12 +15,13 @@ export const handler = async (event: SQSEvent) => {
         try {
             const { detail, detailType } = parseSqsRecord<LoanDTO>(record, LoanDTOSchema);
             const notificationRepository = await DynamoNotificationRepository.create(dynamodbDocumentClient);
+            const notificationService = new NotificationService(notificationRepository);
             const loanRepository = await DynamoLoanRepository.create(dynamodbDocumentClient);
             const inventoryRepository = await DynamoInventoryRepository.create(dynamodbDocumentClient);
             const analyzeDemandUsecase = new AnalyzeBookDemandUsecase(
                 loanRepository,
                 inventoryRepository,
-                notificationRepository
+                notificationService
             );
 
             const notification = await analyzeDemandUsecase.handle(detail);

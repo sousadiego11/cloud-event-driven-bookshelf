@@ -1,6 +1,7 @@
 import type { SQSEvent } from "aws-lambda";
 import type { BookDTO } from "../../application/Book/dtos/BookDto";
 import { NotifyLibraryBookRegisteredUsecase } from "../../application/Notification/Usecase/NotifyLibraryBookRegisteredUsecase";
+import { NotificationService } from "../../application/Notification/services";
 import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
 import { DynamoNotificationRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-notifications-repository";
 import { Logger } from "../../shared/logger";
@@ -12,7 +13,8 @@ export const handler = async (event: SQSEvent) => {
         try {
             const { detail, detailType } = parseSqsRecord<BookDTO>(record, BookDTOSchema);
             const notificationRepository = await DynamoNotificationRepository.create(dynamodbDocumentClient);
-            const notifyLibraryBookRegisteredUsecase = new NotifyLibraryBookRegisteredUsecase(notificationRepository);
+            const notificationService = new NotificationService(notificationRepository);
+            const notifyLibraryBookRegisteredUsecase = new NotifyLibraryBookRegisteredUsecase(notificationService);
             const notification = await notifyLibraryBookRegisteredUsecase.handle(detail);
 
             Logger.log("Library notified about a new registered book", {

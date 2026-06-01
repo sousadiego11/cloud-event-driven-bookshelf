@@ -3,11 +3,11 @@ import { Notification } from "../../../domain/Notification/Notification";
 import type { LoanDTO } from "../../Loan/dtos/LoanDto";
 import type { Usecase } from "../../Shared/Usecase";
 import type { NotificationDTO } from "../dtos/NotificationDto";
-import type { INotificationRepository } from "../repositories";
+import { NotificationService } from "../services";
 
 export class NotifyLibraryLoanRegisteredUsecase implements Usecase<LoanDTO, NotificationDTO> {
     constructor(
-        private readonly notificationRepository: INotificationRepository
+        private readonly notificationService: NotificationService
     ) { }
 
     async handle(registeredLoan: LoanDTO): Promise<NotificationDTO> {
@@ -16,14 +16,10 @@ export class NotifyLibraryLoanRegisteredUsecase implements Usecase<LoanDTO, Noti
             `Loan for book "${registeredLoan.BookId}" registered for CPF ${registeredLoan.Cpf}`
         );
 
-        const existingNotification = await this.notificationRepository.findByIdempotencyKey(notification.getIdempotencyKey());
-        if (existingNotification) {
+        const notificationDto = await this.notificationService.saveIfNotExists(notification);
+        if (!notificationDto) {
             throw new DomainError(`Notification for loan ${registeredLoan.Id} already registered`);
         }
-
-        const notificationDto = notification.toDto();
-
-        await this.notificationRepository.save(notificationDto);
 
         return notificationDto;
     }

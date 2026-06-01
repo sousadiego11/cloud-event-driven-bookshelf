@@ -6,7 +6,7 @@ import type { ILoanRepository } from "../repositories";
 import type { Usecase } from "../../Shared/Usecase";
 import type { IInventoryRepository } from "../../Inventory/repositories";
 import type { NotificationDTO } from "../../Notification/dtos/NotificationDto";
-import type { INotificationRepository } from "../../Notification/repositories";
+import { NotificationService } from "../../Notification/services";
 
 export class AnalyzeBookDemandUsecase
     implements Usecase<LoanDTO, NotificationDTO | null> {
@@ -14,7 +14,7 @@ export class AnalyzeBookDemandUsecase
     constructor(
         private readonly loanRepository: ILoanRepository,
         private readonly inventoryRepository: IInventoryRepository,
-        private readonly notificationRepository: INotificationRepository
+        private readonly notificationService: NotificationService
     ) { }
 
     async handle(loan: LoanDTO): Promise<NotificationDTO | null> {
@@ -38,11 +38,6 @@ export class AnalyzeBookDemandUsecase
             demand.ratio
         );
 
-        const alreadyNotified = await this.notificationRepository.findByIdempotencyKey(notification.getIdempotencyKey());
-        if (alreadyNotified) return null;
-
-        const notificationDto = notification.toDto();
-        await this.notificationRepository.save(notificationDto);
-        return notificationDto;
+        return this.notificationService.saveIfNotExists(notification);
     }
 }

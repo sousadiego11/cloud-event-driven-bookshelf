@@ -1,6 +1,7 @@
 import type { SQSEvent } from "aws-lambda";
 import type { LoanDTO } from "../../application/Loan/dtos/LoanDto";
 import { NotifyLibraryLoanRegisteredUsecase } from "../../application/Notification/Usecase/NotifyLibraryLoanRegisteredUsecase";
+import { NotificationService } from "../../application/Notification/services";
 import { dynamodbDocumentClient } from "../../infrastructure/aws-dynamodb-client/dynamodb-client";
 import { DynamoNotificationRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-notifications-repository";
 import { Logger } from "../../shared/logger";
@@ -12,7 +13,8 @@ export const handler = async (event: SQSEvent) => {
         try {
             const { detail, detailType } = parseSqsRecord<LoanDTO>(record, LoanDTOSchema);
             const notificationRepository = await DynamoNotificationRepository.create(dynamodbDocumentClient);
-            const notifyLibraryLoanRegisteredUsecase = new NotifyLibraryLoanRegisteredUsecase(notificationRepository);
+            const notificationService = new NotificationService(notificationRepository);
+            const notifyLibraryLoanRegisteredUsecase = new NotifyLibraryLoanRegisteredUsecase(notificationService);
             const notification = await notifyLibraryLoanRegisteredUsecase.handle(detail);
 
             Logger.log("Library notified about a new registered loan", {
