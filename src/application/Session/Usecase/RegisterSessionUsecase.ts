@@ -4,7 +4,7 @@ import type { Usecase } from "../../Shared/Usecase";
 import type { SessionDTO } from "../dtos/SessionDto";
 import type { ISessionRepository } from "../repositories";
 
-export type RegisterSessionInput = Pick<SessionDTO, "UserId" | "ConnectionId">;
+export type RegisterSessionInput = Pick<SessionDTO, "ConnectionId">;
 export type RegisterSessionOutput = SessionDTO;
 
 export class RegisterSessionUsecase implements Usecase<RegisterSessionInput, RegisterSessionOutput> {
@@ -18,7 +18,7 @@ export class RegisterSessionUsecase implements Usecase<RegisterSessionInput, Reg
             throw new DomainError(`Session with ConnectionId ${input.ConnectionId.trim()} already exists`);
         }
 
-        const session = Session.register(input.UserId, input.ConnectionId);
+        const session = Session.register(input.ConnectionId);
         const sessionDto = session.toDto();
 
         await this.sessionRepository.save(sessionDto);

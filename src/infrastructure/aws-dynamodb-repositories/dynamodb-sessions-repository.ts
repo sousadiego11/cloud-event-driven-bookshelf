@@ -40,29 +40,12 @@ export class DynamoSessionRepository implements ISessionRepository {
         return result.Items?.[0] as SessionDTO | undefined ?? null;
     }
 
-    async findByUserId(userId: string): Promise<SessionDTO[]> {
+    async findByStatus(status: SessionDTO["Status"]): Promise<SessionDTO[]> {
         const result = await this.docClient.send(new QueryCommand({
             TableName: this.TABLE_NAME,
-            IndexName: "bookshelf_session_user_idx",
-            KeyConditionExpression: "UserId = :userId",
+            IndexName: "bookshelf_session_status_idx",
+            KeyConditionExpression: "Status = :status",
             ExpressionAttributeValues: {
-                ":userId": userId
-            }
-        }));
-
-        return result.Items?.map((item) => item as SessionDTO) ?? [];
-    }
-
-    async findByUserIdAndStatus(userId: string, status: SessionDTO["Status"]): Promise<SessionDTO[]> {
-        const result = await this.docClient.send(new QueryCommand({
-            TableName: this.TABLE_NAME,
-            IndexName: "bookshelf_session_user_status_idx",
-            KeyConditionExpression: "UserId = :userId AND #status = :status",
-            ExpressionAttributeNames: {
-                "#status": "Status"
-            },
-            ExpressionAttributeValues: {
-                ":userId": userId,
                 ":status": status
             }
         }));
@@ -70,13 +53,12 @@ export class DynamoSessionRepository implements ISessionRepository {
         return result.Items?.map((item) => item as SessionDTO) ?? [];
     }
 
-    async findByUserIdRegisteredAfter(userId: string, registeredAt: string): Promise<SessionDTO[]> {
+    async findByRegisteredAt(registeredAt: string): Promise<SessionDTO[]> {
         const result = await this.docClient.send(new QueryCommand({
             TableName: this.TABLE_NAME,
-            IndexName: "bookshelf_session_user_registered_idx",
-            KeyConditionExpression: "UserId = :userId AND RegisteredAt > :registeredAt",
+            IndexName: "bookshelf_session_registered_at_idx",
+            KeyConditionExpression: "RegisteredAt = :registeredAt",
             ExpressionAttributeValues: {
-                ":userId": userId,
                 ":registeredAt": registeredAt
             }
         }));
@@ -84,13 +66,12 @@ export class DynamoSessionRepository implements ISessionRepository {
         return result.Items?.map((item) => item as SessionDTO) ?? [];
     }
 
-    async findByUserIdUpdatedAfter(userId: string, updatedAt: string): Promise<SessionDTO[]> {
+    async findByUpdatedAt(updatedAt: string): Promise<SessionDTO[]> {
         const result = await this.docClient.send(new QueryCommand({
             TableName: this.TABLE_NAME,
-            IndexName: "bookshelf_session_user_updated_idx",
-            KeyConditionExpression: "UserId = :userId AND UpdatedAt > :updatedAt",
+            IndexName: "bookshelf_session_updated_at_idx",
+            KeyConditionExpression: "UpdatedAt = :updatedAt",
             ExpressionAttributeValues: {
-                ":userId": userId,
                 ":updatedAt": updatedAt
             }
         }));

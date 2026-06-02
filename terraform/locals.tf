@@ -43,6 +43,14 @@ locals {
       function_name = "bookshelf-analyze-demand-loan-registered"
       handler       = "aws-sqs/analyze_demand_loan_registered.handler"
     }
+    register_session = {
+      function_name = "bookshelf-register-session"
+      handler       = "aws-apigateway/register_session.handler"
+    }
+    close_session = {
+      function_name = "bookshelf-close-session"
+      handler       = "aws-apigateway/close_session.handler"
+    }
   }
 
   events = {
@@ -53,7 +61,7 @@ locals {
     names = {
       book_registered = "BookRegistered"
       loan_registered = "LoanRegistered"
-      loan_returned = "LoanReturned"
+      loan_returned   = "LoanReturned"
     }
   }
 
@@ -90,11 +98,10 @@ locals {
     sessions = {
       name = "bookshelf-sessions"
       indexes = {
-        connection      = "bookshelf_session_connection_idx"
-        user            = "bookshelf_session_user_idx"
-        user_status     = "bookshelf_session_user_status_idx"
-        user_registered = "bookshelf_session_user_registered_idx"
-        user_updated    = "bookshelf_session_user_updated_idx"
+        connection    = "bookshelf_session_connection_idx"
+        status        = "bookshelf_session_status_idx"
+        registered_at = "bookshelf_session_registered_at_idx"
+        updated_at    = "bookshelf_session_updated_at_idx"
       }
     }
   }
@@ -103,8 +110,8 @@ locals {
     api_name   = "books-api"
     stage_name = "dev"
     paths = {
-      books = "books"
-      loans = "loans"
+      books       = "books"
+      loans       = "loans"
       return_loan = "return"
     }
   }

@@ -137,3 +137,43 @@ resource "aws_lambda_function" "analyze_demand_loan_registered" {
     Name = "AnalyzeDemandLoanRegisteredFunction"
   }
 }
+
+resource "aws_lambda_function" "register_session" {
+  function_name = local.lambdas.register_session.function_name
+
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
+
+  handler = local.lambdas.register_session.handler
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "RegisterSessionFunction"
+  }
+}
+
+resource "aws_lambda_function" "close_session" {
+  function_name = local.lambdas.close_session.function_name
+
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
+
+  handler = local.lambdas.close_session.handler
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "CloseSessionFunction"
+  }
+}

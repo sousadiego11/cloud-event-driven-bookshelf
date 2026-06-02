@@ -4,14 +4,12 @@ import { DomainError } from "../Error/errors";
 
 export namespace SessionDomain {
     export type Id = string;
-    export type UserId = string;
     export type ConnectionId = string;
     export type Status = "active" | "closed";
 }
 
 export class Session {
     readonly #id: SessionDomain.Id;
-    readonly #userId: SessionDomain.UserId;
     readonly #connectionId: SessionDomain.ConnectionId;
     #status: SessionDomain.Status;
     readonly #registeredAt: Date;
@@ -19,27 +17,20 @@ export class Session {
 
     private constructor(
         id: SessionDomain.Id,
-        userId: SessionDomain.UserId,
         connectionId: SessionDomain.ConnectionId,
         status: SessionDomain.Status,
         registeredAt: Date,
         updatedAt: Date
     ) {
         this.#id = id;
-        this.#userId = userId;
         this.#connectionId = connectionId;
         this.#status = status;
         this.#registeredAt = registeredAt;
         this.#updatedAt = updatedAt;
     }
 
-    static register(userId: SessionDomain.UserId, connectionId: SessionDomain.ConnectionId): Session {
-        const normalizedUserId = userId.trim();
+    static register(connectionId: SessionDomain.ConnectionId): Session {
         const normalizedConnectionId = connectionId.trim();
-
-        if (!normalizedUserId) {
-            throw new DomainError("UserId cannot be empty");
-        }
 
         if (!normalizedConnectionId) {
             throw new DomainError("ConnectionId cannot be empty");
@@ -50,7 +41,6 @@ export class Session {
 
         return new Session(
             id.getValue(),
-            normalizedUserId,
             normalizedConnectionId,
             "active",
             registeredAt,
@@ -61,7 +51,6 @@ export class Session {
     static fromDto(sessionDto: SessionDTO): Session {
         return new Session(
             sessionDto.Id,
-            sessionDto.UserId,
             sessionDto.ConnectionId,
             sessionDto.Status,
             new Date(sessionDto.RegisteredAt),
@@ -82,10 +71,6 @@ export class Session {
         return this.#id;
     }
 
-    getUserId(): SessionDomain.UserId {
-        return this.#userId;
-    }
-
     getConnectionId(): SessionDomain.ConnectionId {
         return this.#connectionId;
     }
@@ -93,7 +78,6 @@ export class Session {
     toDto(): SessionDTO {
         return {
             Id: this.#id,
-            UserId: this.#userId,
             ConnectionId: this.#connectionId,
             Status: this.#status,
             RegisteredAt: this.#registeredAt.toISOString(),

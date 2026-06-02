@@ -238,11 +238,6 @@ resource "aws_dynamodb_table" "sessions" {
   }
 
   attribute {
-    name = "UserId"
-    type = "S"
-  }
-
-  attribute {
     name = "ConnectionId"
     type = "S"
   }
@@ -273,57 +268,32 @@ resource "aws_dynamodb_table" "sessions" {
   }
 
   global_secondary_index {
-    name            = local.dynamodb.sessions.indexes.user
+    name            = local.dynamodb.sessions.indexes.status
     projection_type = "ALL"
-
-    key_schema {
-      attribute_name = "UserId"
-      key_type       = "HASH"
-    }
-  }
-
-  global_secondary_index {
-    name            = local.dynamodb.sessions.indexes.user_status
-    projection_type = "ALL"
-
-    key_schema {
-      attribute_name = "UserId"
-      key_type       = "HASH"
-    }
 
     key_schema {
       attribute_name = "Status"
-      key_type       = "RANGE"
+      key_type       = "HASH"
     }
   }
 
   global_secondary_index {
-    name            = local.dynamodb.sessions.indexes.user_registered
+    name            = local.dynamodb.sessions.indexes.registered_at
     projection_type = "ALL"
-
-    key_schema {
-      attribute_name = "UserId"
-      key_type       = "HASH"
-    }
 
     key_schema {
       attribute_name = "RegisteredAt"
-      key_type       = "RANGE"
+      key_type       = "HASH"
     }
   }
 
   global_secondary_index {
-    name            = local.dynamodb.sessions.indexes.user_updated
+    name            = local.dynamodb.sessions.indexes.updated_at
     projection_type = "ALL"
 
     key_schema {
-      attribute_name = "UserId"
-      key_type       = "HASH"
-    }
-
-    key_schema {
       attribute_name = "UpdatedAt"
-      key_type       = "RANGE"
+      key_type       = "HASH"
     }
   }
 
