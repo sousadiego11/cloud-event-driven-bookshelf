@@ -30,7 +30,9 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       aws_dynamodb_table.inventory.arn,
       "${aws_dynamodb_table.inventory.arn}/index/*",
       aws_dynamodb_table.notifications.arn,
-      "${aws_dynamodb_table.notifications.arn}/index/*"
+      "${aws_dynamodb_table.notifications.arn}/index/*",
+      aws_dynamodb_table.sessions.arn,
+      "${aws_dynamodb_table.sessions.arn}/index/*"
     ]
   }
 

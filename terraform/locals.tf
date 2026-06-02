@@ -87,6 +87,16 @@ locals {
         idempotency_key = "bookshelf_notification_idempotency_key_idx"
       }
     }
+    sessions = {
+      name = "bookshelf-sessions"
+      indexes = {
+        connection      = "bookshelf_session_connection_idx"
+        user            = "bookshelf_session_user_idx"
+        user_status     = "bookshelf_session_user_status_idx"
+        user_registered = "bookshelf_session_user_registered_idx"
+        user_updated    = "bookshelf_session_user_updated_idx"
+      }
+    }
   }
 
   apigateway = {
