@@ -307,7 +307,6 @@
                             <th>CPF</th>
                             <th>Livro ID</th>
                             <th>Registrado em</th>
-                            <th>Devolução</th>
                             <th>Devolvido</th>
                         </tr>
                     </thead>
@@ -337,8 +336,7 @@
                 target: '/loans', method: 'POST',
                 fields: [
                     { id: 'l-book', label: 'ID do livro', type: 'text', key: 'BookId' },
-                    { id: 'l-cpf', label: 'CPF', type: 'text', key: 'Cpf' },
-                    { id: 'l-due', label: 'Devolução', type: 'date', key: 'DueDate' }
+                    { id: 'l-cpf', label: 'CPF', type: 'text', key: 'Cpf' }
                 ]
             },
             return: {
