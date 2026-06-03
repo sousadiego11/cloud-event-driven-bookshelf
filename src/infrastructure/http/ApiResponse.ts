@@ -2,9 +2,17 @@ import z, { ZodError } from "zod";
 import { DomainError } from "../../domain/Error/errors";
 
 export class ApiResponse {
+    private static readonly headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Content-Type": "application/json",
+    };
+
     static ok(data: unknown) {
         return {
             statusCode: 200,
+            headers: this.headers,
             body: JSON.stringify(data),
         };
     }
@@ -12,6 +20,7 @@ export class ApiResponse {
     static created(data?: unknown) {
         return {
             statusCode: 201,
+            headers: this.headers,
             body: JSON.stringify(data ?? {}),
         };
     }
@@ -21,6 +30,7 @@ export class ApiResponse {
         if (error instanceof ZodError) {
             return {
                 statusCode: 400,
+                headers: this.headers,
                 body: JSON.stringify({
                     error: "Validation error",
                     details: z.treeifyError(error),
@@ -32,6 +42,7 @@ export class ApiResponse {
         if (error instanceof DomainError) {
             return {
                 statusCode: 400,
+                headers: this.headers,
                 body: JSON.stringify({
                     error: error.message,
                     type: error.name,
@@ -43,6 +54,7 @@ export class ApiResponse {
         if (error instanceof Error) {
             return {
                 statusCode: 500,
+                headers: this.headers,
                 body: JSON.stringify({
                     error: error.message,
                 }),
@@ -52,6 +64,7 @@ export class ApiResponse {
         // UNKNOWN
         return {
             statusCode: 500,
+            headers: this.headers,
             body: JSON.stringify({
                 error: "Unknown error",
             }),
