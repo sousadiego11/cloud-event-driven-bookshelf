@@ -13,6 +13,13 @@ resource "aws_lambda_function" "register_book" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "RegisterBookFunction"
   }
@@ -33,6 +40,13 @@ resource "aws_lambda_function" "register_loan" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "RegisterLoanFunction"
   }
@@ -52,6 +66,13 @@ resource "aws_lambda_function" "return_loan" {
   depends_on = [
     aws_iam_role_policy.lambda_policy
   ]
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
 
   tags = {
     Name = "ReturnLoanFunction"
@@ -79,6 +100,13 @@ resource "aws_lambda_function" "notify_library_book_registered" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "NotifyLibraryBookRegisteredFunction"
   }
@@ -105,6 +133,13 @@ resource "aws_lambda_function" "notify_library_loan_registered" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "NotifyLibraryLoanRegisteredFunction"
   }
@@ -123,6 +158,13 @@ resource "aws_lambda_function" "notify_library_loan_returned" {
     variables = {
       WEBSOCKET_URL = aws_apigatewayv2_api.websocket_api.api_endpoint
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
   }
 
   role = aws_iam_role.lambda_role.arn
@@ -151,6 +193,13 @@ resource "aws_lambda_function" "analyze_demand_loan_registered" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   role = aws_iam_role.lambda_role.arn
 
   depends_on = [
@@ -177,6 +226,13 @@ resource "aws_lambda_function" "register_session" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "RegisterSessionFunction"
   }
@@ -196,6 +252,13 @@ resource "aws_lambda_function" "close_session" {
   depends_on = [
     aws_iam_role_policy.lambda_policy
   ]
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
 
   tags = {
     Name = "CloseSessionFunction"
@@ -217,6 +280,13 @@ resource "aws_lambda_function" "list_books" {
     aws_iam_role_policy.lambda_policy
   ]
 
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
+
   tags = {
     Name = "ListBooksFunction"
   }
@@ -236,6 +306,13 @@ resource "aws_lambda_function" "list_loans" {
   depends_on = [
     aws_iam_role_policy.lambda_policy
   ]
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
 
   tags = {
     Name = "ListLoansFunction"
