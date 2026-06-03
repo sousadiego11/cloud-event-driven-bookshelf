@@ -136,8 +136,6 @@ function wsConnect() {
     ws.onclose = () => {
         setWs(false);
         addEv('disconnected');
-
-        setTimeout(wsConnect, 5000); // tenta novamente em 5s
     };
 }
 
@@ -157,4 +155,4 @@ function addEv(msg) {
 }
 
 renderForms();
-wsConnect();
+setTimeout(wsConnect, 5000); // tenta novamente em 5s

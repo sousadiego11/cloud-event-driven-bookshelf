@@ -1,7 +1,7 @@
 export interface SessionDTO {
     Id: string;
     ConnectionId: string;
-    Status: "active" | "closed";
+    SessionStatus: "active" | "closed";
     RegisteredAt: string;
     UpdatedAt: string;
 }

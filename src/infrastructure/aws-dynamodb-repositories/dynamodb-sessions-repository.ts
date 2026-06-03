@@ -40,17 +40,17 @@ export class DynamoSessionRepository implements ISessionRepository {
         return result.Items?.[0] as SessionDTO | undefined ?? null;
     }
 
-    async findByStatus(status: SessionDTO["Status"]): Promise<SessionDTO[]> {
+    async findByStatus(status: SessionDTO["SessionStatus"]): Promise<SessionDTO[]> {
         const result = await this.docClient.send(new QueryCommand({
             TableName: this.TABLE_NAME,
             IndexName: "bookshelf_session_status_idx",
-            KeyConditionExpression: "Status = :status",
+            KeyConditionExpression: "SessionStatus = :status",
             ExpressionAttributeValues: {
                 ":status": status
             }
         }));
 
-        return result.Items?.map((item) => item as SessionDTO) ?? [];
+        return result.Items?.map(item => item as SessionDTO) ?? [];
     }
 
     async findByRegisteredAt(registeredAt: string): Promise<SessionDTO[]> {

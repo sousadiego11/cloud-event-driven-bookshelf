@@ -3,6 +3,18 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
     effect = "Allow"
 
     actions = [
+      "execute-api:ManageConnections"
+    ]
+
+    resources = [
+      "${aws_apigatewayv2_api.websocket_api.execution_arn}/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents"

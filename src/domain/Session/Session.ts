@@ -11,7 +11,7 @@ export namespace SessionDomain {
 export class Session {
     readonly #id: SessionDomain.Id;
     readonly #connectionId: SessionDomain.ConnectionId;
-    #status: SessionDomain.Status;
+    #sessionStatus: SessionDomain.Status;
     readonly #registeredAt: Date;
     #updatedAt: Date;
 
@@ -24,7 +24,7 @@ export class Session {
     ) {
         this.#id = id;
         this.#connectionId = connectionId;
-        this.#status = status;
+        this.#sessionStatus = status;
         this.#registeredAt = registeredAt;
         this.#updatedAt = updatedAt;
     }
@@ -52,18 +52,18 @@ export class Session {
         return new Session(
             sessionDto.Id,
             sessionDto.ConnectionId,
-            sessionDto.Status,
+            sessionDto.SessionStatus,
             new Date(sessionDto.RegisteredAt),
             new Date(sessionDto.UpdatedAt)
         );
     }
 
     close(): void {
-        if (this.#status === "closed") {
+        if (this.#sessionStatus === "closed") {
             throw new DomainError("Session already closed");
         }
 
-        this.#status = "closed";
+        this.#sessionStatus = "closed";
         this.#updatedAt = new Date();
     }
 
@@ -79,7 +79,7 @@ export class Session {
         return {
             Id: this.#id,
             ConnectionId: this.#connectionId,
-            Status: this.#status,
+            SessionStatus: this.#sessionStatus,
             RegisteredAt: this.#registeredAt.toISOString(),
             UpdatedAt: this.#updatedAt.toISOString(),
         };

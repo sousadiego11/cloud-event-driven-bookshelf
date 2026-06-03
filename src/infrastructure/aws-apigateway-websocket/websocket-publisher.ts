@@ -5,6 +5,7 @@ import {
 import type { ISessionRepository } from "../../application/Session/repositories";
 import type { IWebSocketPublisher } from "../../application/Websocket/IWebsocketPublisher";
 import type { Websockets } from "../../application/Websocket/Websockets";
+import { Logger } from "../../shared/logger";
 
 export class AwsWebSocketPublisher implements IWebSocketPublisher {
     private readonly client: ApiGatewayManagementApiClient;
@@ -27,6 +28,10 @@ export class AwsWebSocketPublisher implements IWebSocketPublisher {
             throw new Error("WEBSOCKET_URL environment variable is not set");
         }
 
+        Logger.log("WebSocketPublisher initialized", {
+            endpoint
+        });
+
         return new AwsWebSocketPublisher(
             endpoint,
             sessionRepository
@@ -37,7 +42,17 @@ export class AwsWebSocketPublisher implements IWebSocketPublisher {
         name: E,
         payload: Websockets.Mappings[E]
     ): Promise<void> {
+
+        Logger.log("WebSocket publish started", {
+            eventName: name,
+        });
+
         const sessions = await this.sessionRepository.findByStatus("active");
+
+        Logger.log("WebSocket sessions fetched", {
+            count: sessions.length,
+            status: "active"
+        });
 
         const message = new TextEncoder().encode(
             JSON.stringify({
@@ -46,15 +61,54 @@ export class AwsWebSocketPublisher implements IWebSocketPublisher {
             })
         );
 
-        await Promise.all(
+        const results = await Promise.allSettled(
             sessions.map(async session => {
-                await this.client.send(
-                    new PostToConnectionCommand({
-                        ConnectionId: session.ConnectionId,
-                        Data: message
-                    })
-                );
+                try {
+                    await this.client.send(
+                        new PostToConnectionCommand({
+                            ConnectionId: session.ConnectionId,
+                            Data: message
+                        })
+                    );
+
+                    return {
+                        connectionId: session.ConnectionId,
+                        status: "sent"
+                    };
+                } catch (err) {
+                    Logger.error("WebSocket send failed", {
+                        connectionId: session.ConnectionId,
+                        error: err
+                    });
+
+                    return {
+                        connectionId: session.ConnectionId,
+                        status: "failed",
+                        error: err
+                    };
+                }
             })
         );
+
+        const succeeded = results.filter(r =>
+            r.status === "fulfilled" && r.value.status === "sent"
+        ).length;
+
+        const failed = results.length - succeeded;
+
+        if (failed > 0) {
+            Logger.error("WebSocket publish partially failed", {
+                eventName: name,
+                total: results.length,
+                succeeded,
+                failed
+            });
+            return;
+        }
+
+        Logger.log("WebSocket publish success", {
+            eventName: name,
+            total: results.length
+        });
     }
 }

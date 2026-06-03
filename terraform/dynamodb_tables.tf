@@ -243,7 +243,7 @@ resource "aws_dynamodb_table" "sessions" {
   }
 
   attribute {
-    name = "Status"
+    name = "SessionStatus"
     type = "S"
   }
 
@@ -272,7 +272,7 @@ resource "aws_dynamodb_table" "sessions" {
     projection_type = "ALL"
 
     key_schema {
-      attribute_name = "Status"
+      attribute_name = "SessionStatus"
       key_type       = "HASH"
     }
   }
