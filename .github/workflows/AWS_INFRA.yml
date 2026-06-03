@@ -33,7 +33,10 @@ jobs:
         run: terraform init -input=false
 
       - name: Terraform Plan
-        run: terraform plan -input=false -out=tfplan -detailed-exitcode
+        id: plan
+        run: |
+          terraform plan -input=false -out=tfplan -detailed-exitcode
+          echo "exitcode=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: Terraform Apply
@@ -69,6 +72,22 @@ jobs:
           - key: analyze_demand_loan_registered
             function_name: bookshelf-analyze-demand-loan-registered
             handler: aws-sqs/analyze_demand_loan_registered.handler
+
+          - key: register_session
+            function_name: bookshelf-register-session
+            handler: aws-apigateway/register_session.handler
+
+          - key: close_session
+            function_name: bookshelf-close-session
+            handler: aws-apigateway/close_session.handler
+
+          - key: list_books
+            function_name: bookshelf-list-books
+            handler: aws-apigateway/list_books.handler
+
+          - key: list_loans
+            function_name: bookshelf-list-loans
+            handler: aws-apigateway/list_loans.handler
     steps:
       - name: Checkout
         uses: actions/checkout@v5
