@@ -111,11 +111,33 @@ async function listData(name) {
 let ws = null;
 function wsConnect() {
     if (ws) ws.close();
+
     ws = new WebSocket(document.getElementById('wsUrl').value);
-    ws.onopen = () => { setWs(true); addEv('connected'); };
-    ws.onmessage = e => { try { const d = JSON.parse(e.data); addEv(d.detail || JSON.stringify(d).substring(0, 80)); } catch { addEv(e.data); } };
-    ws.onerror = () => addEv('connection error');
-    ws.onclose = () => { setWs(false); addEv('disconnected'); };
+
+    ws.onopen = () => {
+        setWs(true);
+        addEv('connected');
+    };
+
+    ws.onmessage = e => {
+        try {
+            const d = JSON.parse(e.data);
+            addEv(d.detail || JSON.stringify(d).substring(0, 80));
+        } catch {
+            addEv(e.data);
+        }
+    };
+
+    ws.onerror = () => {
+        addEv('connection error');
+    };
+
+    ws.onclose = () => {
+        setWs(false);
+        addEv('disconnected');
+
+        setTimeout(wsConnect, 5000); // tenta novamente em 5s
+    };
 }
 
 function setWs(ok) {
@@ -134,4 +156,4 @@ function addEv(msg) {
 }
 
 renderForms();
-setTimeout(wsConnect, 600);
+wsConnect();

@@ -67,6 +67,12 @@ resource "aws_lambda_function" "notify_library_book_registered" {
   handler = local.lambdas.notify_library_book_registered.handler
   runtime = "nodejs20.x"
 
+  environment {
+    variables = {
+      WEBSOCKET_URL = aws_apigatewayv2_api.websocket_api.api_endpoint
+    }
+  }
+
   role = aws_iam_role.lambda_role.arn
 
   depends_on = [
@@ -86,6 +92,12 @@ resource "aws_lambda_function" "notify_library_loan_registered" {
 
   handler = local.lambdas.notify_library_loan_registered.handler
   runtime = "nodejs20.x"
+
+  environment {
+    variables = {
+      WEBSOCKET_URL = aws_apigatewayv2_api.websocket_api.api_endpoint
+    }
+  }
 
   role = aws_iam_role.lambda_role.arn
 
@@ -107,6 +119,12 @@ resource "aws_lambda_function" "notify_library_loan_returned" {
   handler = local.lambdas.notify_library_loan_returned.handler
   runtime = "nodejs20.x"
 
+  environment {
+    variables = {
+      WEBSOCKET_URL = aws_apigatewayv2_api.websocket_api.api_endpoint
+    }
+  }
+
   role = aws_iam_role.lambda_role.arn
 
   depends_on = [
@@ -126,6 +144,12 @@ resource "aws_lambda_function" "analyze_demand_loan_registered" {
 
   handler = local.lambdas.analyze_demand_loan_registered.handler
   runtime = "nodejs20.x"
+
+  environment {
+    variables = {
+      WEBSOCKET_URL = aws_apigatewayv2_api.websocket_api.api_endpoint
+    }
+  }
 
   role = aws_iam_role.lambda_role.arn
 

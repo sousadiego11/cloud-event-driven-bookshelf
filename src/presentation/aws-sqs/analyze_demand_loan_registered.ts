@@ -9,6 +9,8 @@ import { DynamoInventoryRepository } from "../../infrastructure/aws-dynamodb-rep
 import { Logger } from "../../shared/logger";
 import { parseSqsRecord } from "../../shared/parseSqsEvent";
 import { LoanDTOSchema } from "../zod/LoanSchemas";
+import { AwsWebSocketPublisher } from "../../infrastructure/aws-apigateway-websocket/websocket-publisher";
+import { DynamoSessionRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-sessions-repository";
 
 export const handler = async (event: SQSEvent) => {
     for (const record of event.Records) {
@@ -18,10 +20,13 @@ export const handler = async (event: SQSEvent) => {
             const notificationService = new NotificationService(notificationRepository);
             const loanRepository = await DynamoLoanRepository.create(dynamodbDocumentClient);
             const inventoryRepository = await DynamoInventoryRepository.create(dynamodbDocumentClient);
+            const sessionRepo = await DynamoSessionRepository.create(dynamodbDocumentClient);
+            const wsPublisher = await AwsWebSocketPublisher.create(sessionRepo);
             const analyzeDemandUsecase = new AnalyzeBookDemandUsecase(
                 loanRepository,
                 inventoryRepository,
-                notificationService
+                notificationService,
+                wsPublisher
             );
 
             const notification = await analyzeDemandUsecase.handle(detail);

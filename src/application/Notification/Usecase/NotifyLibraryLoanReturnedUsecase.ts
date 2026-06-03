@@ -3,11 +3,14 @@ import { Notification } from "../../../domain/Notification/Notification";
 import type { LoanDTO } from "../../Loan/dtos/LoanDto";
 import type { Usecase } from "../../Shared/Usecase";
 import type { NotificationDTO } from "../dtos/NotificationDto";
+import type { IWebSocketPublisher } from "../../Websocket/IWebsocketPublisher";
+import { Websockets } from "../../Websocket/Websockets";
 import { NotificationService } from "../services";
 
 export class NotifyLibraryLoanReturnedUsecase implements Usecase<LoanDTO, NotificationDTO> {
     constructor(
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private readonly webSocketPublisher: IWebSocketPublisher
     ) { }
 
     async handle(returnedLoan: LoanDTO): Promise<NotificationDTO> {
@@ -20,6 +23,11 @@ export class NotifyLibraryLoanReturnedUsecase implements Usecase<LoanDTO, Notifi
         if (!notificationDto) {
             throw new DomainError(`Notification for loan return ${returnedLoan.Id} already registered`);
         }
+
+        await this.webSocketPublisher.publish(
+            Websockets.Names.NotificationCreated,
+            notificationDto
+        );
 
         return notificationDto;
     }

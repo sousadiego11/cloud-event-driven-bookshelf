@@ -7,6 +7,8 @@ import { DynamoNotificationRepository } from "../../infrastructure/aws-dynamodb-
 import { Logger } from "../../shared/logger";
 import { parseSqsRecord } from "../../shared/parseSqsEvent";
 import { LoanDTOSchema } from "../zod/LoanSchemas";
+import { DynamoSessionRepository } from "../../infrastructure/aws-dynamodb-repositories/dynamodb-sessions-repository";
+import { AwsWebSocketPublisher } from "../../infrastructure/aws-apigateway-websocket/websocket-publisher";
 
 export const handler = async (event: SQSEvent) => {
     for (const record of event.Records) {
@@ -14,7 +16,9 @@ export const handler = async (event: SQSEvent) => {
             const { detail, detailType } = parseSqsRecord<LoanDTO>(record, LoanDTOSchema);
             const notificationRepository = await DynamoNotificationRepository.create(dynamodbDocumentClient);
             const notificationService = new NotificationService(notificationRepository);
-            const notifyLibraryLoanReturnedUsecase = new NotifyLibraryLoanReturnedUsecase(notificationService);
+            const sessionRepo = await DynamoSessionRepository.create(dynamodbDocumentClient);
+            const wsPublisher = await AwsWebSocketPublisher.create(sessionRepo);
+            const notifyLibraryLoanReturnedUsecase = new NotifyLibraryLoanReturnedUsecase(notificationService, wsPublisher);
             const notification = await notifyLibraryLoanReturnedUsecase.handle(detail);
 
             Logger.log("Library notified about a returned loan", {

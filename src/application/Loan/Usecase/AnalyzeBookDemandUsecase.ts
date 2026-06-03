@@ -6,6 +6,8 @@ import type { ILoanRepository } from "../repositories";
 import type { Usecase } from "../../Shared/Usecase";
 import type { IInventoryRepository } from "../../Inventory/repositories";
 import type { NotificationDTO } from "../../Notification/dtos/NotificationDto";
+import type { IWebSocketPublisher } from "../../Websocket/IWebsocketPublisher";
+import { Websockets } from "../../Websocket/Websockets";
 import { NotificationService } from "../../Notification/services";
 
 export class AnalyzeBookDemandUsecase
@@ -14,7 +16,8 @@ export class AnalyzeBookDemandUsecase
     constructor(
         private readonly loanRepository: ILoanRepository,
         private readonly inventoryRepository: IInventoryRepository,
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private readonly webSocketPublisher: IWebSocketPublisher
     ) { }
 
     async handle(loan: LoanDTO): Promise<NotificationDTO | null> {
@@ -38,6 +41,15 @@ export class AnalyzeBookDemandUsecase
             demand.ratio
         );
 
-        return this.notificationService.saveIfNotExists(notification);
+        const notificationDto = await this.notificationService.saveIfNotExists(notification);
+
+        if (notificationDto) {
+            await this.webSocketPublisher.publish(
+                Websockets.Names.NotificationCreated,
+                notificationDto
+            );
+        }
+
+        return notificationDto;
     }
 }
