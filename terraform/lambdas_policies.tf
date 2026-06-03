@@ -20,6 +20,7 @@ data "aws_iam_policy_document" "lambda_policy_doc" {
       "dynamodb:GetItem",
       "dynamodb:Query",
       "dynamodb:UpdateItem",
+      "dynamodb:Scan"
     ]
 
     resources = [
