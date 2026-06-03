@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookshelf API - Teste</title>
+    <title>Bookshelf API - Test</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
         * {
@@ -14,23 +14,28 @@
         }
 
         body {
-            font-family: system-ui, sans-serif;
-            background: #f4f0eb;
-            padding: 16px;
-            font-size: 14px
+            font-family: Georgia, serif;
+            background: #f8f3ea;
+            padding: 24px;
+            font-size: 14px;
+            color: #2f241d;
+            min-height: 100vh;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .card {
-            background: #fff;
-            border: 0.5px solid #ddd;
+            background: #fffdf8;
+            border: 1px solid #d8cbb8;
             border-radius: 12px;
-            padding: 16px
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
         }
 
         .full {
@@ -38,185 +43,215 @@
         }
 
         h1 {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 28px;
+            font-weight: 600;
             text-align: center;
-            margin-bottom: 16px;
-            color: #1a1a1a
+            margin-bottom: 24px;
+            color: #3f2e1f;
+            letter-spacing: .5px;
         }
 
         h2 {
-            font-size: 15px;
-            font-weight: 500;
-            color: #1a1a1a;
+            font-size: 16px;
+            font-weight: 600;
+            color: #4b3828;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 0.5px solid #e5e5e5
+            border-bottom: 1px solid #e6dac9;
         }
 
         .row {
             display: flex;
             gap: 8px;
-            margin-bottom: 8px;
-            align-items: center
+            margin-bottom: 10px;
+            align-items: center;
         }
 
         .row label {
             font-size: 12px;
-            color: #666;
-            width: 100px;
-            flex-shrink: 0
+            color: #6b5b4b;
+            font-weight: 500;
+            width: 120px;
+            flex-shrink: 0;
         }
 
         .row input {
             flex: 1;
-            padding: 6px 8px;
-            border: 0.5px solid #ccc;
+            padding: 8px 10px;
+            border: 1px solid #d6c7b4;
             border-radius: 8px;
             font-size: 13px;
-            background: #fff;
-            color: #1a1a1a
+            background: #fffefb;
+            color: #2f241d;
         }
 
         .row input:focus {
             outline: none;
-            border-color: #888
+            border-color: #4f6f52;
         }
 
         .actions {
             display: flex;
             gap: 8px;
-            margin-top: 10px;
-            align-items: center
+            margin-top: 12px;
+            align-items: center;
         }
 
         button {
-            padding: 6px 14px;
-            border: 0.5px solid #ccc;
+            padding: 8px 14px;
+            border: 1px solid #bca58a;
             border-radius: 8px;
-            background: #fff;
-            color: #1a1a1a;
+            background: #fffaf3;
+            color: #4b3828;
             font-size: 13px;
-            cursor: pointer
+            cursor: pointer;
+            transition: .15s;
         }
 
         button:hover {
-            background: #f5f5f5
+            background: #f3e8d8;
         }
 
         button.primary {
-            background: #e8f0fe;
-            border-color: #a8c0f0;
-            color: #1a4faf
+            background: #4f6f52;
+            border-color: #4f6f52;
+            color: white;
         }
 
         button.primary:hover {
-            opacity: .85
+            background: #425d45;
         }
 
         .badge {
             display: inline-block;
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 8px;
-            font-size: 11px
+            font-size: 11px;
+            font-weight: 500;
         }
 
         .badge.ok {
-            background: #e6f4ea;
-            color: #1e6e3a
+            background: #dce8d7;
+            color: #2e5b34;
         }
 
         .badge.err {
-            background: #fce8e8;
-            color: #b91c1c
+            background: #f5d7d7;
+            color: #8f2b2b;
         }
 
         .badge.warn {
-            background: #fef3cd;
-            color: #92600a
+            background: #f4ead2;
+            color: #8c6a22;
         }
 
         .msg {
             font-size: 12px;
             margin-top: 8px;
-            padding: 6px 10px;
+            padding: 8px 10px;
             border-radius: 8px;
-            display: none
+            display: none;
         }
 
         .msg.ok {
-            background: #e6f4ea;
-            color: #1e6e3a;
-            display: block
+            background: #dce8d7;
+            color: #2e5b34;
+            display: block;
         }
 
         .msg.err {
-            background: #fce8e8;
-            color: #b91c1c;
-            display: block
+            background: #f5d7d7;
+            color: #8f2b2b;
+            display: block;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            margin-top: 8px
+            margin-top: 8px;
         }
 
         th {
             text-align: left;
-            padding: 6px 8px;
-            color: #666;
-            font-weight: 500;
-            border-bottom: 0.5px solid #e5e5e5
+            padding: 8px;
+            color: #6b5b4b;
+            font-weight: 600;
+            border-bottom: 1px solid #e6dac9;
+            background: #faf5ee;
         }
 
         td {
-            padding: 6px 8px;
-            border-bottom: 0.5px solid #e5e5e5;
-            color: #1a1a1a
+            padding: 8px;
+            border-bottom: 1px solid #efe4d4;
+            color: #2f241d;
+        }
+
+        tr:hover {
+            background: #faf7f1;
         }
 
         .events {
-            max-height: 160px;
+            max-height: 180px;
             overflow-y: auto;
-            font-size: 12px
+            font-size: 12px;
+            background: #fffaf3;
+            border: 1px solid #e6dac9;
+            border-radius: 8px;
+            padding: 8px;
         }
 
         .ev {
-            padding: 5px 0;
-            border-bottom: 0.5px solid #e5e5e5;
-            color: #666
+            padding: 6px 0;
+            border-bottom: 1px solid #efe4d4;
+            color: #6b5b4b;
         }
 
         .ev span {
-            color: #1a1a1a;
-            margin-right: 6px
+            color: #4b3828;
+            margin-right: 6px;
+            font-weight: 500;
         }
 
         .config-row {
             display: flex;
             gap: 8px;
             align-items: center;
-            margin-bottom: 8px
+            margin-bottom: 8px;
         }
 
         .config-row label {
             font-size: 12px;
-            color: #666;
+            color: #6b5b4b;
+            font-weight: 500;
             width: 80px;
-            flex-shrink: 0
+            flex-shrink: 0;
         }
 
         .config-row input {
             flex: 1;
-            padding: 5px 8px;
-            border: 0.5px solid #ccc;
+            padding: 8px 10px;
+            border: 1px solid #d6c7b4;
             border-radius: 8px;
             font-size: 12px;
             font-family: monospace;
-            background: #fff;
-            color: #1a1a1a
+            background: #fffefb;
+            color: #2f241d;
+        }
+
+        .config-row input:focus {
+            outline: none;
+            border-color: #4f6f52;
+        }
+
+        @media (max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
@@ -227,67 +262,67 @@
     <div class="grid">
 
         <div class="card full">
-            <h2>Configuração</h2>
+            <h2>Configuration</h2>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
                 <div class="config-row"><label>REST URL</label><input id="restUrl" value="http://localhost:3000"></div>
                 <div class="config-row"><label>WS URL</label><input id="wsUrl" value="ws://localhost:8000"></div>
             </div>
             <div class="actions">
-                <button class="primary" onclick="wsConnect()"><i class="ti ti-plug"></i> Conectar WS</button>
-                <span id="wsStatus" class="badge warn">desconectado</span>
+                <button class="primary" onclick="wsConnect()"><i class="ti ti-plug"></i> Connect WS</button>
+                <span id="wsStatus" class="badge warn">disconnected</span>
             </div>
         </div>
 
         <div class="card">
-            <h2>Cadastrar livro</h2>
+            <h2>Register book</h2>
             <div id="f-book"></div>
-            <div class="actions"><button class="primary" onclick="submit('book')">Cadastrar</button></div>
+            <div class="actions"><button class="primary" onclick="submit('book')">Register</button></div>
             <div class="msg" id="msg-book"></div>
         </div>
 
         <div class="card">
-            <h2>Emprestar livro</h2>
+            <h2>Loan book</h2>
             <div id="f-loan"></div>
-            <div class="actions"><button class="primary" onclick="submit('loan')">Emprestar</button></div>
+            <div class="actions"><button class="primary" onclick="submit('loan')">Loan</button></div>
             <div class="msg" id="msg-loan"></div>
         </div>
 
         <div class="card">
-            <h2>Devolver livro</h2>
+            <h2>Return book</h2>
             <div id="f-return"></div>
-            <div class="actions"><button class="primary" onclick="submit('return')">Devolver</button></div>
+            <div class="actions"><button class="primary" onclick="submit('return')">Return</button></div>
             <div class="msg" id="msg-return"></div>
         </div>
 
         <div class="card">
-            <h2>Eventos WebSocket</h2>
+            <h2>WebSocket Events</h2>
             <div class="events" id="events">
-                <div class="ev"><span>—</span>aguardando conexão</div>
+                <div class="ev"><span>—</span>waiting for connection</div>
             </div>
             <div class="actions" style="margin-top:8px">
-                <button onclick="document.getElementById('events').innerHTML=''">Limpar</button>
+                <button onclick="document.getElementById('events').innerHTML=''">Clear</button>
             </div>
         </div>
 
         <div class="card full">
             <h2>
-                Livros
+                Books
                 <button style="float:right;margin-top:-2px" onclick="listData('books')"><i class="ti ti-refresh"></i>
-                    Atualizar</button>
+                    Refresh</button>
             </h2>
             <div id="tbl-books">
                 <table>
                     <thead>
                         <tr>
-                            <th>Título</th>
-                            <th>Autor</th>
+                            <th>Title</th>
+                            <th>Author</th>
                             <th>ISBN</th>
                             <th>ID</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4" style="color:#999">Clique em atualizar</td>
+                            <td colspan="4" style="color:#999">Click refresh to load</td>
                         </tr>
                     </tbody>
                 </table>
@@ -296,23 +331,23 @@
 
         <div class="card full">
             <h2>
-                Empréstimos
+                Loans
                 <button style="float:right;margin-top:-2px" onclick="listData('loans')"><i class="ti ti-refresh"></i>
-                    Atualizar</button>
+                    Refresh</button>
             </h2>
             <div id="tbl-loans">
                 <table>
                     <thead>
                         <tr>
                             <th>CPF</th>
-                            <th>Livro ID</th>
-                            <th>Registrado em</th>
-                            <th>Devolvido</th>
+                            <th>Book ID</th>
+                            <th>Registered at</th>
+                            <th>Returned</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="5" style="color:#999">Clique em atualizar</td>
+                            <td colspan="5" style="color:#999">Click refresh to load</td>
                         </tr>
                     </tbody>
                 </table>
@@ -326,23 +361,23 @@
             book: {
                 target: '/books', method: 'POST',
                 fields: [
-                    { id: 'b-title', label: 'Título', type: 'text', key: 'Title' },
-                    { id: 'b-author', label: 'Autor', type: 'text', key: 'Author' },
+                    { id: 'b-title', label: 'Title', type: 'text', key: 'Title' },
+                    { id: 'b-author', label: 'Author', type: 'text', key: 'Author' },
                     { id: 'b-isbn', label: 'ISBN', type: 'text', key: 'Isbn' },
-                    { id: 'b-qty', label: 'Quantidade', type: 'number', key: 'Quantity', value: '1' }
+                    { id: 'b-qty', label: 'Quantity', type: 'number', key: 'Quantity', value: '1' }
                 ]
             },
             loan: {
                 target: '/loans', method: 'POST',
                 fields: [
-                    { id: 'l-book', label: 'ID do livro', type: 'text', key: 'BookId' },
+                    { id: 'l-book', label: 'Book ID', type: 'text', key: 'BookId' },
                     { id: 'l-cpf', label: 'CPF', type: 'text', key: 'Cpf' }
                 ]
             },
             return: {
                 target: '/loans/return', method: 'POST',
                 fields: [
-                    { id: 'r-id', label: 'ID do empréstimo', type: 'text', key: 'LoanId' }
+                    { id: 'r-id', label: 'Loan ID', type: 'text', key: 'LoanId' }
                 ]
             }
         };
@@ -351,8 +386,8 @@
             books: {
                 endpoint: '/books', key: 'Books',
                 cols: [
-                    { label: 'Título', fn: r => r.Title },
-                    { label: 'Autor', fn: r => r.Author },
+                    { label: 'Title', fn: r => r.Title },
+                    { label: 'Author', fn: r => r.Author },
                     { label: 'ISBN', fn: r => r.Isbn },
                     { label: 'ID', fn: r => r.Id?.substring(0, 8) + '…' }
                 ]
@@ -361,13 +396,13 @@
                 endpoint: '/loans', key: 'Loans',
                 cols: [
                     { label: 'CPF', fn: r => r.Cpf },
-                    { label: 'Livro ID', fn: r => r.BookId?.substring(0, 8) + '…' },
-                    { label: 'Registrado em', fn: r => r.RegisteredAt?.substring(0, 10) },
-                    { label: 'Devolução', fn: r => r.DueDate },
+                    { label: 'Book ID', fn: r => r.BookId?.substring(0, 8) + '…' },
+                    { label: 'Registered at', fn: r => r.RegisteredAt?.substring(0, 10) },
+                    { label: 'Due date', fn: r => r.DueDate },
                     {
-                        label: 'Devolvido', fn: r => r.ReturnedAt
-                            ? '<span class="badge ok">sim</span>'
-                            : '<span class="badge warn">não</span>'
+                        label: 'Returned', fn: r => r.ReturnedAt
+                            ? '<span class="badge ok">yes</span>'
+                            : '<span class="badge warn">no</span>'
                     }
                 ]
             }
@@ -398,7 +433,7 @@
             const body = {};
             for (const f of def.fields) {
                 const v = document.getElementById(f.id).value;
-                if (!v) { showMsg(name, 'Preencha todos os campos', false); return; }
+                if (!v) { showMsg(name, 'Please fill in all fields', false); return; }
                 body[f.key] = f.type === 'number' ? Number(v) : v;
             }
             try {
@@ -408,7 +443,7 @@
                     body: JSON.stringify(body)
                 });
                 const data = await r.json();
-                if (!r.ok) throw new Error(data.message || 'Erro ' + r.status);
+                if (!r.ok) throw new Error(data.message || 'Error ' + r.status);
                 showMsg(name, 'OK — ID: ' + (data.Id || data.LoanId || '—').substring(0, 8) + '…', true);
                 def.fields.forEach(f => { document.getElementById(f.id).value = f.value || ''; });
             } catch (e) { showMsg(name, e.message, false); }
@@ -422,7 +457,7 @@
                 const rows = data[def.key] || [];
                 const tbl = document.getElementById('tbl-' + name);
                 if (!rows.length) {
-                    tbl.innerHTML = '<p style="font-size:12px;color:#999;padding:8px 0">Nenhum item encontrado</p>';
+                    tbl.innerHTML = '<p style="font-size:12px;color:#999;padding:8px 0">No items found</p>';
                     return;
                 }
                 tbl.innerHTML = `<table>
@@ -436,21 +471,21 @@
         function wsConnect() {
             if (ws) ws.close();
             ws = new WebSocket(document.getElementById('wsUrl').value);
-            ws.onopen = () => { setWs(true); addEv('conectado'); };
+            ws.onopen = () => { setWs(true); addEv('connected'); };
             ws.onmessage = e => { try { const d = JSON.parse(e.data); addEv(d.detail || JSON.stringify(d).substring(0, 80)); } catch { addEv(e.data); } };
-            ws.onerror = () => addEv('erro na conexão');
-            ws.onclose = () => { setWs(false); addEv('desconectado'); };
+            ws.onerror = () => addEv('connection error');
+            ws.onclose = () => { setWs(false); addEv('disconnected'); };
         }
 
         function setWs(ok) {
             const b = document.getElementById('wsStatus');
             b.className = 'badge ' + (ok ? 'ok' : 'warn');
-            b.textContent = ok ? 'conectado' : 'desconectado';
+            b.textContent = ok ? 'connected' : 'disconnected';
         }
 
         function addEv(msg) {
             const c = document.getElementById('events');
-            const t = new Date().toLocaleTimeString('pt-BR');
+            const t = new Date().toLocaleTimeString('en');
             const d = document.createElement('div');
             d.className = 'ev';
             d.innerHTML = `<span>${t}</span>${msg}`;
