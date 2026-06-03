@@ -92,3 +92,33 @@ Resources:
       Runtime: nodejs24.x
       Architectures:
         - x86_64
+
+  ListBooksFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/list_books.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        ListBooks:
+          Type: Api
+          Properties:
+            Path: /books
+            Method: get
+
+  ListLoansFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: aws-apigateway/list_loans.handler
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Events:
+        ListLoans:
+          Type: Api
+          Properties:
+            Path: /loans
+            Method: get

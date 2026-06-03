@@ -2,7 +2,8 @@ import {
   DeleteCommand,
   DynamoDBDocumentClient,
   PutCommand,
-  QueryCommand
+  QueryCommand,
+  ScanCommand
 } from "@aws-sdk/lib-dynamodb";
 
 import type { LoanDTO } from "../../application/Loan/dtos/LoanDto";
@@ -62,6 +63,14 @@ export class DynamoLoanRepository implements ILoanRepository {
         ":bookId": bookId,
         ":pastDate": pastDateIso
       }
+    }));
+
+    return (result.Items as LoanDTO[]) || [];
+  }
+
+  async getAll(): Promise<LoanDTO[]> {
+    const result = await this.docClient.send(new ScanCommand({
+      TableName: this.TABLE_NAME
     }));
 
     return (result.Items as LoanDTO[]) || [];

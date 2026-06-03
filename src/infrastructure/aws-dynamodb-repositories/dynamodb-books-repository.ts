@@ -2,7 +2,8 @@ import {
   DeleteCommand,
   DynamoDBDocumentClient,
   PutCommand,
-  QueryCommand
+  QueryCommand,
+  ScanCommand
 } from "@aws-sdk/lib-dynamodb";
 
 import type { BookDTO } from "../../application/Book/dtos/BookDto";
@@ -45,5 +46,13 @@ export class DynamoBookRepository implements IBookRepository {
       TableName: this.TABLE_NAME,
       Key: { Id: id }
     }));
+  }
+
+  async getAll(): Promise<BookDTO[]> {
+    const result = await this.docClient.send(new ScanCommand({
+      TableName: this.TABLE_NAME
+    }));
+
+    return (result.Items as BookDTO[]) || [];
   }
 }

@@ -51,6 +51,14 @@ locals {
       function_name = "bookshelf-close-session"
       handler       = "aws-apigateway/close_session.handler"
     }
+    list_books = {
+      function_name = "bookshelf-list-books"
+      handler       = "aws-apigateway/list_books.handler"
+    }
+    list_loans = {
+      function_name = "bookshelf-list-loans"
+      handler       = "aws-apigateway/list_loans.handler"
+    }
   }
 
   events = {
@@ -114,6 +122,11 @@ locals {
       loans       = "loans"
       return_loan = "return"
     }
+  }
+
+  websocket = {
+    api_name   = "bookshelf-websocket-api"
+    stage_name = "dev"
   }
 
   s3 = {

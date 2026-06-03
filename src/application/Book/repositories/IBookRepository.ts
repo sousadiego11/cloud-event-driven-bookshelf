@@ -6,4 +6,6 @@ export interface IBookRepository {
     findByIsbn(isbn: string): Promise<BookDTO | null>;
 
     delete(id: string): Promise<void>;
+
+    getAll(): Promise<BookDTO[]>;
 }

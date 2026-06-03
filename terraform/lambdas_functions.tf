@@ -177,3 +177,43 @@ resource "aws_lambda_function" "close_session" {
     Name = "CloseSessionFunction"
   }
 }
+
+resource "aws_lambda_function" "list_books" {
+  function_name = local.lambdas.list_books.function_name
+
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
+
+  handler = local.lambdas.list_books.handler
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "ListBooksFunction"
+  }
+}
+
+resource "aws_lambda_function" "list_loans" {
+  function_name = local.lambdas.list_loans.function_name
+
+  filename         = "${path.root}/placeholder.zip"
+  source_code_hash = filebase64sha256("${path.root}/placeholder.zip")
+
+  handler = local.lambdas.list_loans.handler
+  runtime = "nodejs20.x"
+
+  role = aws_iam_role.lambda_role.arn
+
+  depends_on = [
+    aws_iam_role_policy.lambda_policy
+  ]
+
+  tags = {
+    Name = "ListLoansFunction"
+  }
+}

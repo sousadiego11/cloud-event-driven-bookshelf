@@ -8,4 +8,6 @@ export interface ILoanRepository {
     findByBookForCpf(bookId: string, cpf: string): Promise<LoanDTO | null>
 
     findByBookIdInPeriod(bookId: string, days: number): Promise<LoanDTO[]>;
+
+    getAll(): Promise<LoanDTO[]>;
 }

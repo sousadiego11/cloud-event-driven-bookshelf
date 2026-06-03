@@ -26,3 +26,9 @@ Content-Type: application/json
   "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
   "Cpf": "05079313943"
 }
+
+### List All Books - GET /books
+GET http://127.0.0.1:3000/books
+
+### List All Loans - GET /loans
+GET http://127.0.0.1:3000/loans
