@@ -122,7 +122,8 @@ function wsConnect() {
     ws.onmessage = e => {
         try {
             const d = JSON.parse(e.data);
-            addEv(d.detail || JSON.stringify(d).substring(0, 80));
+            const msg = `${d.name}: ${JSON.stringify(d.payload).substring(0, 60)}`;
+            addEv(msg);
         } catch {
             addEv(e.data);
         }
