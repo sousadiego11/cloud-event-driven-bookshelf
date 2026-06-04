@@ -39,10 +39,11 @@ export class DynamoLoanRepository implements ILoanRepository {
       TableName: this.TABLE_NAME,
       IndexName: "bookshelf_book_by_cpf_idx",
       KeyConditionExpression: "Cpf = :cpf AND BookId = :bookId",
-      FilterExpression: "attribute_not_exists(ReturnedAt)",
+      FilterExpression: "(attribute_not_exists(ReturnedAt) OR ReturnedAt = :empty)",
       ExpressionAttributeValues: {
         ":cpf": cpf,
-        ":bookId": bookId
+        ":bookId": bookId,
+        ":empty": ""
       },
       Limit: 1
     }));
