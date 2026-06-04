@@ -90,7 +90,7 @@ resource "aws_lambda_function" "notify_library_book_registered" {
 
   environment {
     variables = {
-      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.api_id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
+      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
     }
   }
 
@@ -123,7 +123,7 @@ resource "aws_lambda_function" "notify_library_loan_registered" {
 
   environment {
     variables = {
-      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.api_id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
+      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
     }
   }
 
@@ -156,7 +156,7 @@ resource "aws_lambda_function" "notify_library_loan_returned" {
 
   environment {
     variables = {
-      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.api_id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
+      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
     }
   }
 
@@ -189,7 +189,7 @@ resource "aws_lambda_function" "analyze_demand_loan_registered" {
 
   environment {
     variables = {
-      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.api_id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
+      WEBSOCKET_URL = "https://${aws_apigatewayv2_api.websocket_api.id}.execute-api.${data.aws_region.current.name}.amazonaws.com/${aws_apigatewayv2_stage.websocket_stage.name}"
     }
   }
 
