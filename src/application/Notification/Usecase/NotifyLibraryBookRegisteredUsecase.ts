@@ -19,16 +19,12 @@ export class NotifyLibraryBookRegisteredUsecase implements Usecase<BookDTO, Noti
             `Book "${registeredBook.Title}" was registered`
         );
 
-        const notificationDto = await this.notificationService.saveIfNotExists(notification);
-        if (!notificationDto) {
-            throw new DomainError(`Notification for book ${registeredBook.Id} already registered`);
-        }
-
+        await this.notificationService.saveIfNotExists(notification);
         await this.webSocketPublisher.publish(
             Websockets.Names.NotificationCreated,
-            notificationDto
+            notification.toDto()
         );
 
-        return notificationDto;
+        return notification.toDto();
     }
 }

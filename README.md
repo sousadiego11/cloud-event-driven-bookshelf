@@ -189,7 +189,7 @@ Content-Type: application/json
 
 {
   "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
-  "Cpf": "05079313943"
+  "Cpf": "00000000000"
 }
 ```
 
@@ -201,7 +201,7 @@ Content-Type: application/json
 
 {
   "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
-  "Cpf": "05079313943"
+  "Cpf": "00000000000"
 }
 ```
 

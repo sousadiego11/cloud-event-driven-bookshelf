@@ -3,7 +3,7 @@
     {
       "messageId": "local-book-registered-message",
       "receiptHandle": "local",
-      "body": "{\"version\":\"0\",\"id\":\"local-event\",\"detail-type\":\"BookRegistered\",\"source\":\"bookshelf.books\",\"account\":\"000000000000\",\"time\":\"2026-05-21T00:00:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"Id\":\"4b13250c-5f7a-4e0f-a67d-91e2b6bf2c6e\",\"Title\":\"Clean Architecture\",\"Author\":\"Robert C. Martin\",\"Isbn\":\"9780134494166\",\"RegisteredAt\":\"2026-05-21T00:00:00.000Z\",\"UpdatedAt\":\"2026-05-21T00:00:00.000Z\"}}",
+      "body": "{\"version\":\"0\",\"id\":\"local-event\",\"detail-type\":\"BookRegistered\",\"source\":\"bookshelf.books\",\"account\":\"000000000000\",\"time\":\"2026-05-21T00:00:00Z\",\"region\":\"us-east-1\",\"resources\":[],\"detail\":{\"Id\":\"be53cfe8-37a4-4b30-abb5-3b84c3b71f28\",\"Title\":\"Clean Architecture\",\"Author\":\"Robert C. Martin\",\"Isbn\":\"9780134494166\",\"RegisteredAt\":\"2026-05-21T00:00:00.000Z\",\"UpdatedAt\":\"2026-05-21T00:00:00.000Z\"}}",
       "attributes": {
         "ApproximateReceiveCount": "1",
         "SentTimestamp": "0",

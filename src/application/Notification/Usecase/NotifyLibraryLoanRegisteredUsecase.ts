@@ -19,16 +19,12 @@ export class NotifyLibraryLoanRegisteredUsecase implements Usecase<LoanDTO, Noti
             `Loan for book "${registeredLoan.BookId}" registered for CPF ${registeredLoan.Cpf}`
         );
 
-        const notificationDto = await this.notificationService.saveIfNotExists(notification);
-        if (!notificationDto) {
-            throw new DomainError(`Notification for loan ${registeredLoan.Id} already registered`);
-        }
-
+        await this.notificationService.saveIfNotExists(notification);
         await this.webSocketPublisher.publish(
             Websockets.Names.NotificationCreated,
-            notificationDto
+            notification.toDto()
         );
 
-        return notificationDto;
+        return notification.toDto();
     }
 }

@@ -41,15 +41,12 @@ export class AnalyzeBookDemandUsecase
             demand.ratio
         );
 
-        const notificationDto = await this.notificationService.saveIfNotExists(notification);
+        await this.notificationService.saveIfNotExists(notification);
+        await this.webSocketPublisher.publish(
+            Websockets.Names.NotificationCreated,
+            notification.toDto()
+        );
 
-        if (notificationDto) {
-            await this.webSocketPublisher.publish(
-                Websockets.Names.NotificationCreated,
-                notificationDto
-            );
-        }
-
-        return notificationDto;
+        return notification.toDto();
     }
 }
