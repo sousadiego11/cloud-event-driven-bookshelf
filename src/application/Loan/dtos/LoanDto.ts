@@ -5,5 +5,6 @@ export interface LoanDTO {
     RegisteredAt: string;
     UpdatedAt: string;
     ReturnedAt?: string;
+    Returned: boolean
     DueDate: string
 }

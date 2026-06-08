@@ -18,7 +18,8 @@ const FORMS = {
     return: {
         target: '/loans/return', method: 'POST',
         fields: [
-            { id: 'r-id', label: 'Loan ID', type: 'text', key: 'LoanId' }
+            { id: 'r-book', label: 'Book ID', type: 'text', key: 'BookId' },
+            { id: 'r-cpf', label: 'CPF', type: 'text', key: 'Cpf' }
         ]
     }
 };
@@ -116,26 +117,25 @@ function wsConnect() {
 
     ws.onopen = () => {
         setWs(true);
-        addEv('connected');
+        addWsLog('connected');
     };
 
     ws.onmessage = e => {
         try {
             const d = JSON.parse(e.data);
-            const msg = `${d.name}: ${JSON.stringify(d.payload).substring(0, 60)}`;
-            addEv(msg);
+            addNotif(d.name, d.payload);
         } catch {
-            addEv(e.data);
+            addNotif('message', e.data);
         }
     };
 
     ws.onerror = () => {
-        addEv('connection error');
+        addWsLog('connection error');
     };
 
     ws.onclose = () => {
         setWs(false);
-        addEv('disconnected');
+        addWsLog('disconnected');
     };
 }
 
@@ -145,14 +145,27 @@ function setWs(ok) {
     b.textContent = ok ? 'connected' : 'disconnected';
 }
 
-function addEv(msg) {
-    const c = document.getElementById('events');
+function addWsLog(msg) {
+    const c = document.getElementById('wsLog');
     const t = new Date().toLocaleTimeString('en');
     const d = document.createElement('div');
-    d.className = 'ev';
-    d.innerHTML = `<span>${t}</span>${msg}`;
+    d.className = 'ws-ev';
+    d.innerHTML = `<span>${t}</span> - ${msg}`;
+    c.insertBefore(d, c.firstChild);
+}
+
+function addNotif(name, payload) {
+    const c = document.getElementById('notifications');
+    const empty = c.querySelector('.notif-empty');
+    if (empty) empty.remove();
+
+    const t = new Date().toLocaleTimeString('en');
+
+    const d = document.createElement('div');
+    d.className = 'notif';
+    d.innerHTML = `<div class="notif-body"><span>${t}</span> - ${payload.Message}</div>`;
     c.insertBefore(d, c.firstChild);
 }
 
 renderForms();
-setTimeout(wsConnect, 5000); // tenta novamente em 5s
+setTimeout(wsConnect, 5000);

@@ -16,6 +16,12 @@ resource "aws_api_gateway_deployment" "books_api" {
       aws_api_gateway_integration.return_loan.id,
       aws_api_gateway_integration.list_books.id,
       aws_api_gateway_integration.list_loans.id,
+      aws_api_gateway_method.options_books.id,
+      aws_api_gateway_method.options_loans.id,
+      aws_api_gateway_method.options_return_loan.id,
+      aws_api_gateway_integration.options_books.id,
+      aws_api_gateway_integration.options_loans.id,
+      aws_api_gateway_integration.options_return_loan.id
     ]))
   }
 
@@ -28,7 +34,10 @@ resource "aws_api_gateway_deployment" "books_api" {
     aws_api_gateway_integration.register_loan,
     aws_api_gateway_integration.return_loan,
     aws_api_gateway_integration.list_books,
-    aws_api_gateway_integration.list_loans
+    aws_api_gateway_integration.list_loans,
+    aws_api_gateway_integration.options_books,
+    aws_api_gateway_integration.options_loans,
+    aws_api_gateway_integration.options_return_loan
   ]
 }
 

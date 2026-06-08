@@ -7,6 +7,8 @@
     <title>Bookshelf API - Test</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
 </head>
 
 <body>
@@ -14,19 +16,33 @@
     <h1>Bookshelf API</h1>
     <div class="grid">
 
-        <div class="card full">
-            <h2>Configuration</h2>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                <div class="config-row"><label>REST URL</label><input id="restUrl" value="http://localhost:3000"></div>
-                <div class="config-row"><label>WS URL</label><input id="wsUrl" value="ws://localhost:8000"></div>
-            </div>
-            <div class="actions">
-                <button class="primary" onclick="wsConnect()"><i class="ti ti-plug"></i> Connect WS</button>
-                <span id="wsStatus" class="badge warn">disconnected</span>
-            </div>
+        <div class="card">
+            <h2><i class="ti ti-api"></i> API Config</h2>
+            <div class="config-row"><label>REST URL</label><input id="restUrl" value="http://localhost:3000"></div>
         </div>
 
         <div class="card">
+            <h2><i class="ti ti-plug"></i> WebSocket</h2>
+            <div class="config-row"><label>WS URL</label><input id="wsUrl" value="ws://localhost:8000"></div>
+            <div class="actions">
+                <button class="primary" onclick="wsConnect()"><i class="ti ti-plug"></i> Connect</button>
+                <span id="wsStatus" class="badge warn">disconnected</span>
+            </div>
+            <div class="ws-log" id="wsLog">
+                <div class="ws-ev"><span>—</span>waiting for connection</div>
+            </div>
+        </div>
+
+        <div class="card full" id="notif-card">
+            <h2><i class="ti ti-bell"></i> Notifications <button style="float:right;margin-top:-2px"
+                    onclick="document.getElementById('notifications').innerHTML=''; document.getElementById('notif-card').classList.remove('has-notifs')">Clear</button>
+            </h2>
+            <div class="notif-list" id="notifications">
+                <div class="notif-empty">No notifications yet</div>
+            </div>
+        </div>
+
+        <div class="card full">
             <h2>Register book</h2>
             <div id="f-book"></div>
             <div class="actions"><button class="primary" onclick="submit('book')">Register</button></div>
@@ -45,16 +61,6 @@
             <div id="f-return"></div>
             <div class="actions"><button class="primary" onclick="submit('return')">Return</button></div>
             <div class="msg" id="msg-return"></div>
-        </div>
-
-        <div class="card">
-            <h2>WebSocket Events</h2>
-            <div class="events" id="events">
-                <div class="ev"><span>—</span>waiting for connection</div>
-            </div>
-            <div class="actions" style="margin-top:8px">
-                <button onclick="document.getElementById('events').innerHTML=''">Clear</button>
-            </div>
         </div>
 
         <div class="card full">

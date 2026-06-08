@@ -89,6 +89,21 @@ resource "aws_dynamodb_table" "loans" {
     type = "S"
   }
 
+  attribute {
+    name = "Returned"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = local.dynamodb.loans.indexes.returned
+    projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "Returned"
+      key_type       = "HASH"
+    }
+  }
+
   global_secondary_index {
     name            = local.dynamodb.loans.indexes.cpf_registered
     projection_type = "ALL"

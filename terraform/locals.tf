@@ -89,6 +89,7 @@ locals {
         book_by_cpf         = "bookshelf_book_by_cpf_idx"
         due_date_registered = "bookshelf_due_date_registered_idx"
         returned_at         = "bookshelf_returned_at_idx"
+        returned            = "bookshelf_returned_idx"
       }
     }
     inventory = {

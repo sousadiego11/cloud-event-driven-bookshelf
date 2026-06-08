@@ -16,6 +16,7 @@ export class Loan {
     readonly #cpf: Cpf;
     readonly #registeredAt: Date;
     #returnedAt?: Date;
+    #returned?: boolean;
     readonly #dueDate: Date;
     #updatedAt: Date;
 
@@ -25,6 +26,7 @@ export class Loan {
         cpf: Cpf,
         registeredAt: Date,
         returnedAt: Date | undefined,
+        returned: boolean,
         dueDate: Date,
         updatedAt: Date
     ) {
@@ -49,7 +51,7 @@ export class Loan {
         const id = Id.generate();
         const registeredAt = new Date();
 
-        return new Loan(id.getValue(), normalizedBookId, loanCpf, registeredAt, undefined, dueDate.value, registeredAt);
+        return new Loan(id.getValue(), normalizedBookId, loanCpf, registeredAt, undefined, false, dueDate.value, registeredAt);
     }
 
     static fromDto(loanDto: LoanDTO): Loan {
@@ -59,6 +61,7 @@ export class Loan {
             Cpf.create(loanDto.Cpf),
             new Date(loanDto.RegisteredAt),
             loanDto.ReturnedAt ? new Date(loanDto.ReturnedAt) : undefined,
+            loanDto.Returned,
             new Date(loanDto.DueDate),
             new Date(loanDto.UpdatedAt)
         );
@@ -71,6 +74,7 @@ export class Loan {
 
         this.#returnedAt = new Date();
         this.#updatedAt = new Date();
+        this.#returned = true;
     }
 
     toDto(): LoanDTO {
@@ -81,6 +85,7 @@ export class Loan {
             RegisteredAt: this.#registeredAt.toISOString(),
             UpdatedAt: this.#updatedAt.toISOString(),
             ReturnedAt: this.#returnedAt?.toISOString(),
+            Returned: this.#returned ?? false,
             DueDate: this.#dueDate.toISOString()
         };
     }

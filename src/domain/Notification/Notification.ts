@@ -83,11 +83,7 @@ export class Notification {
     }
 
     static forHighBookDemand(bookId: string, loanCount: number, periodDays: number, copies: number, ratio: number): Notification {
-        const message =
-            `High demand detected for book ${bookId}. ` +
-            `${loanCount} loans in ${periodDays} days ` +
-            `out of ${copies} copies ` +
-            `Consider purchasing more copies.`;
+        const message = `High demand detected for book ${bookId}. ${loanCount} loans in ${periodDays} days out of ${copies} copies. Consider purchasing more copies.`;
 
         return Notification.register({ bookId, demandRatio: ratio }, message);
     }
