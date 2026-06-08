@@ -5,7 +5,7 @@ const FORMS = {
             { id: 'b-title', label: 'Title', type: 'text', key: 'Title' },
             { id: 'b-author', label: 'Author', type: 'text', key: 'Author' },
             { id: 'b-isbn', label: 'ISBN', type: 'text', key: 'Isbn' },
-            { id: 'b-qty', label: 'Quantity', type: 'number', key: 'Quantity', value: '1' }
+            { id: 'b-qty', label: 'Stock', type: 'number', key: 'Stock', value: '1' }
         ]
     },
     loan: {

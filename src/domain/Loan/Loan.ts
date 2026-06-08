@@ -35,6 +35,7 @@ export class Loan {
         this.#cpf = cpf;
         this.#registeredAt = registeredAt;
         this.#returnedAt = returnedAt;
+        this.#returned = returned;
         this.#dueDate = dueDate;
         this.#updatedAt = updatedAt;
     }
@@ -61,7 +62,7 @@ export class Loan {
             Cpf.create(loanDto.Cpf),
             new Date(loanDto.RegisteredAt),
             loanDto.ReturnedAt ? new Date(loanDto.ReturnedAt) : undefined,
-            loanDto.Returned,
+            loanDto.Returned === "true",
             new Date(loanDto.DueDate),
             new Date(loanDto.UpdatedAt)
         );
@@ -85,7 +86,7 @@ export class Loan {
             RegisteredAt: this.#registeredAt.toISOString(),
             UpdatedAt: this.#updatedAt.toISOString(),
             ReturnedAt: this.#returnedAt?.toISOString(),
-            Returned: this.#returned ?? false,
+            Returned: (this.#returned ?? false) ? "true" : "false",
             DueDate: this.#dueDate.toISOString()
         };
     }
