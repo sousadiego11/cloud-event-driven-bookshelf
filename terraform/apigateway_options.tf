@@ -42,7 +42,10 @@ resource "aws_api_gateway_integration_response" "options_books" {
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 
-  depends_on = [aws_api_gateway_integration.options_books]
+  depends_on = [
+    aws_api_gateway_integration.options_books,
+    aws_api_gateway_method_response.options_books
+  ]
 }
 
 
@@ -90,7 +93,10 @@ resource "aws_api_gateway_integration_response" "options_loans" {
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 
-  depends_on = [aws_api_gateway_integration.options_loans]
+  depends_on = [
+    aws_api_gateway_integration.options_loans,
+    aws_api_gateway_method_response.options_loans
+  ]
 }
 
 
@@ -138,5 +144,8 @@ resource "aws_api_gateway_integration_response" "options_return_loan" {
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 
-  depends_on = [aws_api_gateway_integration.options_return_loan]
+  depends_on = [
+    aws_api_gateway_integration.options_return_loan,
+    aws_api_gateway_method_response.options_return_loan
+  ]
 }
