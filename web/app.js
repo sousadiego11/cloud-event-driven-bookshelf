@@ -31,21 +31,18 @@ const TABLES = {
             { label: 'Title', fn: r => r.Title },
             { label: 'Author', fn: r => r.Author },
             { label: 'ISBN', fn: r => r.Isbn },
-            { label: 'ID', fn: r => r.Id?.substring(0, 8) + '…' }
+            { label: 'ID', fn: r => r.Id }
         ]
     },
     loans: {
         endpoint: '/loans', key: 'Loans',
         cols: [
             { label: 'CPF', fn: r => r.Cpf },
-            { label: 'Book ID', fn: r => r.BookId?.substring(0, 8) + '…' },
+            { label: 'Book ID', fn: r => r.BookId },
             { label: 'Registered at', fn: r => r.RegisteredAt?.substring(0, 10) },
-            { label: 'Due date', fn: r => r.DueDate },
-            {
-                label: 'Returned', fn: r => r.ReturnedAt
-                    ? '<span class="badge ok">yes</span>'
-                    : '<span class="badge warn">no</span>'
-            }
+            { label: 'Due date', fn: r => r.DueDate?.substring(0, 10) },
+            { label: 'Returned', fn: r => r.Returned === "true" ? '<span class="badge ok">yes</span>' : '<span class="badge warn">no</span>' },
+            { label: 'Returned at', fn: r => r.ReturnedAt?.substring(0, 10) },
         ]
     }
 };
