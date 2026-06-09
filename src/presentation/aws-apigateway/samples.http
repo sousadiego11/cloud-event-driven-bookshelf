@@ -14,7 +14,7 @@ POST http://127.0.0.1:3000/loans
 Content-Type: application/json
 
 {
-  "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
+  "BookId": "00000000-0000-0000-0000-000000000000",
   "Cpf": "00000000000"
 }
 
@@ -23,7 +23,7 @@ POST http://127.0.0.1:3000/loans/return
 Content-Type: application/json
 
 {
-  "BookId": "f5b0da38-59b8-4c1a-b90d-f2be36797620",
+  "BookId": "00000000-0000-0000-0000-000000000000",
   "Cpf": "00000000000"
 }
 

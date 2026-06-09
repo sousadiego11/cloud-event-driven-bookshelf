@@ -33,8 +33,7 @@ export class DynamoNotificationRepository implements INotificationRepository {
       KeyConditionExpression: "IdempotencyKey = :idempotencyKey",
       ExpressionAttributeValues: {
         ":idempotencyKey": idempotencyKey
-      },
-      Limit: 1
+      }
     }));
 
     return result.Items?.[0] as NotificationDTO | undefined ?? null;

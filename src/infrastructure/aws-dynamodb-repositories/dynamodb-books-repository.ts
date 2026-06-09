@@ -34,8 +34,8 @@ export class DynamoBookRepository implements IBookRepository {
       KeyConditionExpression: "Isbn = :isbn",
       ExpressionAttributeValues: {
         ":isbn": isbn
-      },
-      Limit: 1
+      }
+
     }));
 
     return result.Items?.[0] as BookDTO | undefined ?? null;

@@ -33,8 +33,7 @@ export class DynamoSessionRepository implements ISessionRepository {
             KeyConditionExpression: "ConnectionId = :connectionId",
             ExpressionAttributeValues: {
                 ":connectionId": connectionId
-            },
-            Limit: 1
+            }
         }));
 
         return result.Items?.[0] as SessionDTO | undefined ?? null;

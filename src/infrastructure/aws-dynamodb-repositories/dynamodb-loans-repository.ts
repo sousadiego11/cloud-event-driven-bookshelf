@@ -44,8 +44,7 @@ export class DynamoLoanRepository implements ILoanRepository {
         ":cpf": cpf,
         ":bookId": bookId,
         ":returned": "false"
-      },
-      Limit: 1
+      }
     }));
 
     return result.Items?.[0] as LoanDTO | undefined ?? null;

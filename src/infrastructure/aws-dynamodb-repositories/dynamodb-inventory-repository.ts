@@ -33,8 +33,7 @@ export class DynamoInventoryRepository implements IInventoryRepository {
       KeyConditionExpression: "BookId = :bookId",
       ExpressionAttributeValues: {
         ":bookId": bookId
-      },
-      Limit: 1
+      }
     }));
 
     return result.Items?.[0] as InventoryDTO | undefined ?? null;
