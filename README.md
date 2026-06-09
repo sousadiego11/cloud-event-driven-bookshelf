@@ -1,9 +1,11 @@
 # 🚀 Cloud Event-Driven Bookshelf
 
 ## 🛠️ Technologies & Tools
-[![My Skills](https://skillicons.dev/icons?i=aws,terraform,docker,typescript,dynamodb,githubactions,nodejs,bun,github&theme=dark&perline=15)](https://skillicons.dev)
+
+[![My Skills](https://skillicons.dev/icons?i=aws,terraform,docker,typescript,dynamodb,githubactions,nodejs,bun,github\&theme=dark\&perline=15)](https://skillicons.dev)
 
 ## ☁️ AWS Services
+
 <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
 <img src="https://icon.icepanel.io/AWS/svg/App-Integration/API-Gateway.svg" width="50" alt="AWS API Gateway"/>
 <img src="https://icon.icepanel.io/AWS/svg/Compute/Lambda.svg" width="50" alt="AWS Lambda"/>
@@ -15,13 +17,15 @@
 
 ---
 
-Cloud-native virtual bookshelf backend featuring **event-driven serverless architecture**, fully automated **CI/CD pipelines**, **infrastructure as code**, and scalable AWS-native services.
+Cloud-native virtual bookshelf backend featuring **event-driven serverless architecture**, **real-time WebSocket notifications**, **browser-based testing tools**, fully automated **CI/CD pipelines**, **Infrastructure as Code**, and scalable AWS-native services.
 
 The system exposes a small but complete library workflow:
 
-- `POST /books` registers a new book
-- `POST /loans` creates a loan when inventory is available
-- `POST /loans/return` returns a borrowed book
+* `POST /books` registers a new book
+* `GET /books` lists registered books
+* `POST /loans` creates a loan when inventory is available
+* `GET /loans` lists active loans
+* `POST /loans/return` returns a borrowed book
 
 Each command runs through a clean flow:
 
@@ -31,96 +35,155 @@ Each command runs through a clean flow:
 4. Domain events are published to EventBridge
 5. EventBridge routes events to SQS queues
 6. SQS listeners handle notifications and follow-up processing
+7. Connected WebSocket clients receive real-time updates
 
 This project is designed to show:
 
-- Event-driven architecture in AWS
-- Clean separation between domain, application, infrastructure, and transport
-- Type-safe backend development with TypeScript
-- Infrastructure as Code with Terraform
-- Local testing with AWS SAM
-- CI/CD pipeline with Terraform and Lambda deploy matrix
+* Event-driven architecture in AWS
+* Real-time communication using WebSockets
+* Clean separation between domain, application, infrastructure, and transport
+* Type-safe backend development with TypeScript
+* Infrastructure as Code with Terraform
+* Local testing with AWS SAM
+* CI/CD pipeline with Terraform and Lambda deploy matrix
 
 ---
 
-## ✨ Main Features
+# ✨ Main Features
 
-- Book registration with DynamoDB persistence
-- Loan registration with inventory validation
-- Loan return flow with event publication
-- EventBridge-based asynchronous messaging
-- SQS consumers for notification and demand-analysis workflows
-- Serverless transport layer using API Gateway and Lambda
-- Terraform-managed infrastructure
-- SAM local execution for API testing
-
----
-
-## 🧩 Architecture
-
-### HTTP Routes
-
-- `POST /books`
-- `POST /loans`
-- `POST /loans/return`
-
-### Event Flow
-
-- `BookRegistered` from `bookshelf.books`
-- `LoanRegistered` from `bookshelf.loans`
-- `LoanReturned` from `bookshelf.loans`
-
-### Queues
-
-- `bookshelf-notify-library-book-registered`
-- `bookshelf-notify-library-loan-registered`
-- `bookshelf-notify-library-loan-returned`
-- `bookshelf-analyze-demand-loan-registered`
+* Book registration with DynamoDB persistence
+* Book listing endpoint
+* Loan registration with inventory validation
+* Loan listing endpoint
+* Loan return flow with event publication
+* EventBridge-based asynchronous messaging
+* SQS consumers for notification and demand-analysis workflows
+* Real-time WebSocket notifications
+* Browser-based testing interface
+* Serverless transport layer using API Gateway and Lambda
+* Terraform-managed infrastructure
+* SAM local execution for API testing
 
 ---
 
-## 🔁 CI/CD
+# ⚡ Real-Time Notifications
 
-The repository uses `.github/workflows/AWS_INFRA.yml` as main delivery pipeline.
+The application also provides a **WebSocket API** for real-time library notifications.
 
-### Terraform job
+When asynchronous events are processed, connected clients receive updates instantly without polling.
 
-- Runs on `push` to `main`
-- Uses `hashicorp/setup-terraform`
-- Authenticates with HCP Terraform
-- Runs `terraform init`, `terraform plan`, and `terraform apply`
+### WebSocket Flow
 
-### Lambda deploy job
+1. Client connects to API Gateway WebSocket
+2. Connection information is persisted
+3. Notification handlers publish WebSocket messages
+4. Connected clients receive live updates
 
-- Runs after Terraform succeeds
-- Uses `strategy.matrix` to deploy each Lambda separately
-- Builds source with `bun run build:lambdas`
-- Configures AWS credentials with GitHub secrets and `aws-actions/configure-aws-credentials@v4`
-- Deploys Lambdas with `aws-actions/aws-lambda-deploy@v1.1.0`
-
-### Matrix functions
-
-- `bookshelf-register-book`
-- `bookshelf-register-loan`
-- `bookshelf-return-loan`
-- `bookshelf-notify-library-book-registered`
-- `bookshelf-notify-library-loan-registered`
-- `bookshelf-notify-library-loan-returned`
-- `bookshelf-analyze-demand-loan-registered`
+This demonstrates how REST APIs and event-driven backends can be combined with real-time communication.
 
 ---
 
-## ▶️ Run Locally
+# 🌐 Web Test Interface
+
+A lightweight web client is included to simplify local testing and demonstration.
+
+The interface allows you to:
+
+* Register books
+* List books
+* Create loans
+* List loans
+* Return loans
+* Connect to the WebSocket endpoint
+* Receive real-time notifications
+
+The web page can be used to demonstrate the complete event-driven workflow without external tools like Postman.
+
+---
+
+# 🧩 Architecture
+
+## HTTP Routes
+
+* `POST /books`
+* `GET /books`
+* `POST /loans`
+* `GET /loans`
+* `POST /loans/return`
+
+## WebSocket
+
+Connected clients receive asynchronous notifications generated by the event pipeline.
+
+## Event Flow
+
+* `BookRegistered` from `bookshelf.books`
+* `LoanRegistered` from `bookshelf.loans`
+* `LoanReturned` from `bookshelf.loans`
+
+## Queues
+
+* `bookshelf-notify-library-book-registered`
+* `bookshelf-notify-library-loan-registered`
+* `bookshelf-notify-library-loan-returned`
+* `bookshelf-analyze-demand-loan-registered`
+
+---
+
+# 🔁 CI/CD
+
+The repository uses `.github/workflows/AWS_INFRA.yml` as the main delivery pipeline.
+
+## Terraform job
+
+* Runs on `push` to `main`
+* Uses `hashicorp/setup-terraform`
+* Authenticates with HCP Terraform
+* Runs `terraform init`, `terraform plan`, and `terraform apply`
+
+## Lambda deploy job
+
+* Runs after Terraform succeeds
+* Uses `strategy.matrix` to deploy each Lambda separately
+* Builds source with `bun run build:lambdas`
+* Configures AWS credentials with GitHub secrets and `aws-actions/configure-aws-credentials@v4`
+* Deploys Lambdas with `aws-actions/aws-lambda-deploy@v1.1.0`
+
+## Matrix functions
+
+### REST
+
+* `bookshelf-register-book`
+* `bookshelf-list-books`
+* `bookshelf-register-loan`
+* `bookshelf-list-loans`
+* `bookshelf-return-loan`
+
+### Event Consumers
+
+* `bookshelf-notify-library-book-registered`
+* `bookshelf-notify-library-loan-registered`
+* `bookshelf-notify-library-loan-returned`
+* `bookshelf-analyze-demand-loan-registered`
+
+### WebSocket
+
+* `bookshelf-websocket-connect`
+* `bookshelf-websocket-disconnect`
+
+---
+
+# ▶️ Run Locally
 
 > ⚠️ This project uses real AWS-oriented infrastructure. Make sure you have the proper credentials and permissions before running Terraform.
 
-### 1. Install dependencies
+## 1. Install dependencies
 
 ```bash
 bun install
 ```
 
-### 2. Configure AWS credentials
+## 2. Configure AWS credentials
 
 Set your AWS credentials in environment variables:
 
@@ -130,7 +193,7 @@ AWS_SECRET_ACCESS_KEY=your_secret
 AWS_DEFAULT_REGION=your_region
 ```
 
-### 3. Provision infrastructure
+## 3. Provision infrastructure
 
 Use Terraform to create or update the required resources:
 
@@ -140,19 +203,25 @@ terraform plan
 terraform apply
 ```
 
-### 4. Build Lambda bundles
+## 4. Build Lambda bundles
 
 ```bash
 bun run build:lambdas
 ```
 
-### 5. Start local API Gateway
+## 5. Start local API Gateway
 
 ```bash
 bun run start:gateway
 ```
 
-### 6. Invoke the SQS notifications locally
+## 6. Start the web interface
+
+```bash
+bun run start:web
+```
+
+## 7. Invoke the SQS notifications locally
 
 ```bash
 bun run invoke:sqs:book-registered
@@ -163,11 +232,11 @@ bun run invoke:sqs:analyze-demand
 
 ---
 
-## 🧪 Sample Requests
+# 🧪 Sample Requests
 
-You can use [`src/presentation/aws-apigateway/samples.http`](src/presentation/aws-apigateway/samples.http) to test the main routes.
+You can use `src/presentation/aws-apigateway/samples.http` to test the main routes.
 
-### Register Book
+## Register Book
 
 ```http
 POST http://127.0.0.1:3000/books
@@ -181,7 +250,7 @@ Content-Type: application/json
 }
 ```
 
-### Register Loan
+## Register Loan
 
 ```http
 POST http://127.0.0.1:3000/loans
@@ -193,7 +262,7 @@ Content-Type: application/json
 }
 ```
 
-### Return Loan
+## Return Loan
 
 ```http
 POST http://127.0.0.1:3000/loans/return
@@ -207,19 +276,21 @@ Content-Type: application/json
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
-- `src/domain/` - core business objects and domain errors
-- `src/application/` - use cases, DTOs, repositories, and event definitions
-- `src/infrastructure/` - AWS implementations for DynamoDB and EventBridge
-- `src/presentation/` - API Gateway and SQS Lambda handlers
-- `terraform/` - infrastructure as code
-- `sam/` - local SAM template for testing
+* `src/domain/` - core business objects and domain errors
+* `src/application/` - use cases, DTOs, repositories, event definitions, and WebSocket contracts
+* `src/infrastructure/` - AWS implementations for DynamoDB, EventBridge, and WebSocket publishing
+* `src/presentation/` - API Gateway and SQS Lambda handlers
+* `web/` - browser-based testing interface
+* `terraform/` - infrastructure as code
+* `sam/` - local SAM template for testing
 
 ---
 
-## 📌 Notes
+# 📌 Notes
 
-- Project name in code: `cloud-event-driven-bookshelf`
-- Main stack: TypeScript, AWS Lambda, API Gateway, EventBridge, SQS, DynamoDB, Terraform, AWS SAM
-- This repository is intended as a portfolio piece focused on backend architecture, cloud integration, and event-driven design
+* Project name in code: `cloud-event-driven-bookshelf`
+* Main stack: TypeScript, AWS Lambda, API Gateway, EventBridge, SQS, DynamoDB, WebSocket API, Terraform, AWS SAM
+* This repository is intended as a portfolio piece focused on backend architecture, cloud integration, event-driven design, and real-time communication
+* The project demonstrates how synchronous REST APIs and asynchronous event processing can coexist in a modern serverless architecture
